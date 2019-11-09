@@ -1,0 +1,7 @@
+**
+!Makefile
+!README.md
+!packagers/**
+!containers/**
+!helms/**
+!scripts/**

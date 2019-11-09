@@ -1,0 +1,15 @@
+# Docker images registry
+# This registry will be used for automatic docker image name deduction based on Legion naming for images
+# Each image could be overridden manually in .<service>.image, please see .edi root section or other
+# Type: string
+imagesRegistry: odahu/
+
+packagers:
+  rest:
+    # REST packager could be disabled
+    # Type: bool
+    enabled: true
+
+    # This variable can be uncommented to setup custom image name for REST packager
+    # Type: string
+    # image: custom-image:1.0

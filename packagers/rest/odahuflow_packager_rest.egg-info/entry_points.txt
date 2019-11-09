@@ -1,0 +1,3 @@
+[console_scripts]
+odahuflow-pack-to-rest = odahuflow.packager.rest:work_resource_file
+
