@@ -14,7 +14,7 @@ To make Docker repository, you may:
 
 ## Installation
 
-Please install `odahuflow-packager-rest` Python package
+Please install `odahuflow-rest-packager` Python package
 using your favourite package management tool (pip, pipenv or etc.).
 
 

@@ -5,7 +5,7 @@ BUILD_TAG=latest
 
 ## docker-build-rest-packager: Build REST packager docker image
 docker-build-rest-packager:
-	docker build -t odahu/packager-rest:${BUILD_TAG} -f containers/rest/Dockerfile .
+	docker build -t odahu/odahuflow-rest-packager:${BUILD_TAG} -f containers/rest/Dockerfile .
 
 ## install-rest-packer: Instasll rest packer dependencies
 install-rest-packer:

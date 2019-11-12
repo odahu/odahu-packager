@@ -35,11 +35,9 @@ RUN wget https://github.com/krallin/tini/releases/download/v0.18.0/tini-amd64 -q
 
 RUN pip3 install --disable-pip-version-check --upgrade pip==18.1 pipenv==2018.10.13
 
-RUN pip install -e 'git+https://github.com/odahu/odahu-flow@feat/1079-migration#egg=odahuflow-sdk&subdirectory=odahuFlow/sdk'
-
-COPY packagers/rest "${WORK_DIR}/packagers/rest"
-RUN pip3 install --no-deps -e packagers/rest
-
 COPY containers/rest/registries.conf \
      containers/rest/storage.conf \
        /etc/containers/
+
+COPY packagers/rest "${WORK_DIR}/packagers/rest"
+RUN pip3 install -e packagers/rest

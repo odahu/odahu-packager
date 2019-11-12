@@ -38,13 +38,13 @@ def extract_version() -> str:
             raise RuntimeError("Unable to find version string in %s." % (file_content,))
 
 setup(
-    name='odahuflow-packager-rest',
+    name='odahuflow-rest-packager',
     version=extract_version(),
     description='Legion\'s GPPI to rest CLI',
     packages=find_namespace_packages(),
     url='https://github.com/odahu/odahu-packager',
-    author='Legion Platform Team',
-    author_email='alexey@kharlamov.biz, kirill@makhonin.biz',
+    author='Vlad Tokarev, Vitalik Solodilov',
+    author_email='vlad.tokarev.94@gmail.com, mcdkr@yandex.ru',
     license='Apache v2',
     entry_points={
         'console_scripts': [
@@ -57,7 +57,7 @@ setup(
         'click>=7.0',
         'urllib3>=1.24.3',
         'pyyaml>=3.1.2',
-        'pydantic>=0.29',
+        'pydantic==0.32.2',
         'docker',
         'botocore>=1.12.75',
         'boto3>=1.9.75',

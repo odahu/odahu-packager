@@ -11,7 +11,7 @@ data:
     id: docker-rest
     spec:
       entrypoint: "/usr/local/bin/odahuflow-pack-to-rest"
-      defaultImage: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.edi "tpl" "%spackager-rest:%s") }}"
+      defaultImage: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.packagers.rest "tpl" "%sodahuflow-rest-packager:%s") }}"
       privileged: true
       schema:
         targets:
@@ -103,9 +103,9 @@ data:
                       - myservice:123
                       - {{ Name }}:{{ Version }}`}}
                 - name: type
-                  value: integer
+                  value: string
                 - name: default
-                  value: 4
+                  value: ""
 ---
 apiVersion: batch/v1
 kind: Job
@@ -129,8 +129,8 @@ spec:
         - name: packager-resources-uploader
           env:
             - name: EDI_URL
-              value: http://{{ .Release.Name }}-edi.{{ .Release.Namespace }}.svc.cluster.local
-          image: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.edi "tpl" "%slegion-pipeline-agent:%s") }}"
+              value: http://odahuflow-edi.{{ .Release.Namespace }}.svc.cluster.local
+          image: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.resources_applier "tpl" "%sodahuflow-packager-resource-applier:%s") }}"
           volumeMounts:
             - mountPath: /opt/odahuflow-resources
               name: resources

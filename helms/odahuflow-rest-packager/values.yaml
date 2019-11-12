@@ -4,6 +4,17 @@
 # Type: string
 imagesRegistry: odahu/
 
+# Version of Toolchain
+# By default .Chart.AppVersion version is used
+# Type: string
+# packagerVersion: "1.0"
+
+# Resource applier configuration
+resources_applier:
+  # This variable can be uncommented to setup custom image name
+  # Type: string
+  # image: custom-image:1.0
+
 packagers:
   rest:
     # REST packager could be disabled

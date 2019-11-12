@@ -33,7 +33,7 @@ def test_without_template() -> None:
 def test_basic_template_name() -> None:
     result = build_image_name('{{ Name }}/{{ RandomUUID }}:{{ Version }}',
                               TemplateNameValues(Name='name', Version='version', RandomUUID="1234"))
-    assert 'name/1234:version' == result
+    assert result == 'name/1234:version'
 
 
 def test_empty_random_uuid() -> None:

@@ -75,6 +75,8 @@ pipeline {
         param_pypi_private_url = "${params.PyPiPrivateUrl}"
         param_pypi_private_creds = "nexus-local-repository"
         param_pypi_publishing_enabled = "${PyPiPublishingEnabled}"
+
+        param_dockerhub_publishing_enabled = "${params.DockerHubPublishingEnabled}"
     }
 
     stages {
@@ -127,14 +129,14 @@ pipeline {
                 stage("Build REST packager Docker image") {
                     steps {
                         script {
-                            cicdLibrary.buildLegionImage('packager-rest', '.', 'containers/rest/Dockerfile')
+                            cicdLibrary.buildLegionImage('odahuflow-rest-packager', '.', 'containers/rest/Dockerfile')
                         }
                     }
                 }
                 stage('Build resource applier Docker image') {
                     steps {
                         script {
-                            cicdLibrary.buildLegionImage('resource-applier', '.', 'containers/resource-applier/Dockerfile')
+                            cicdLibrary.buildLegionImage('odahuflow-packager-resource-applier', '.', 'containers/resource-applier/Dockerfile')
                         }
                     }
                 }
@@ -160,14 +162,14 @@ pipeline {
                 stage("Upload REST packager Docker image") {
                     steps {
                         script {
-                            cicdLibrary.uploadDockerImage('packager-rest')
+                            cicdLibrary.uploadDockerImage('odahuflow-rest-packager', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
                         }
                     }
                 }
                 stage("Upload resource applier Docker image") {
                     steps {
                         script {
-                            cicdLibrary.uploadDockerImage('resource-applier')
+                            cicdLibrary.uploadDockerImage('odahuflow-packager-resource-applier', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
                         }
                     }
                 }
