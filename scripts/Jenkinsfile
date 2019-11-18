@@ -1,0 +1,227 @@
+import java.text.SimpleDateFormat
+
+class Globals {
+    static String rootCommit = null
+    static String buildVersion = null
+    static String dockerLabels = null
+    static String dockerCacheArg = null
+}
+
+pipeline {
+    agent { label 'ec2builder' }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '35', artifactNumToKeepStr: '35'))
+    }
+    environment {
+        /// Input parameters
+        //Enable docker cache parameter
+        param_enable_docker_cache = "${params.EnableDockerCache}"
+        //Build major version release and optionally push it to public repositories
+        param_stable_release = "${params.StableRelease}"
+        //Release version to tag all artifacts to
+        param_release_version = "${params.ReleaseVersion}"
+        //Git Branch to build package from
+        param_git_branch = "${params.GitBranch}"
+        //Legion CICD repo url (for pipeline methods import)
+        param_legion_cicd_repo = "${params.LegionCicdRepo}"
+        //Legion repo branch (tag or branch name)
+        param_legion_cicd_branch = "${params.LegionCicdBranch}"
+        //Push release git tag
+        param_push_git_tag = "${params.PushGitTag}"
+        //Rewrite git tag i exists
+        param_force_tag_push = "${params.ForceTagPush}"
+        //Push release to master bransh
+        param_update_master = "${params.UpdateMaster}"
+        //Upload legion python package to pypi
+        param_upload_legion_package = "${params.UploadLegionPackage}"
+        //Set next releases version explicitly
+        param_next_version = "${params.NextVersion}"
+        // Update version string
+        param_update_version_string = "${params.UpdateVersionString}"
+        // Release version to be used as docker cache source
+        param_docker_cache_source = "${params.DockerCacheSource}"
+        //Artifacts storage parameters
+        param_helm_repo_git_url = "${params.HelmRepoGitUrl}"
+        param_helm_repo_git_branch = "${params.HelmRepoGitBranch}"
+        param_helm_repository = "${params.HelmRepository}"
+        param_pypi_repository = "${params.PyPiRepository}"  // TODO: remove
+        param_local_pypi_distribution_target_name = "${params.LocalPyPiDistributionTargetName}" // TODO: remove
+        param_test_pypi_distribution_target_name = "${params.testPyPiDistributionTargetName}" // TODO: remove
+        param_public_pypi_distribution_target_name = "${params.PublicPyPiDistributionTargetName}" // TODO: remove
+        param_pypi_distribution_target_name = "${params.PyPiDistributionTargetName}" // TODO: remove
+        param_jenkins_plugins_repository_store = "${params.JenkinsPluginsRepositoryStore}"
+        param_jenkins_plugins_repository = "${params.JenkinsPluginsRepository}"
+        param_docker_registry = "${params.DockerRegistry}"
+        param_docker_hub_registry = "${params.DockerHubRegistry}"
+        param_git_deploy_key = "${params.GitDeployKey}"
+        legionCicdGitlabKey = "${params.legionCicdGitlabKey}"
+        ///Job parameters
+        sharedLibPath = "legion-cicd/pipelines/legionPipeline.groovy"
+        pathToCharts = "${WORKSPACE}/helms"
+        gcpCredential = "${params.GCPCredential}"
+        documentationLocation = "${params.DocumentationGCS}"
+
+        // NPM
+        param_npm_public_url = "${params.NpmPublicUrl}"
+        param_npm_public_creds = "npm_public_cred"
+        param_npm_private_url = "${params.NpmPrivateUrl}"
+        param_npm_private_creds = "nexus-local-repository"
+        param_npm_publishing_enabled = "${NpmPublishingEnabled}"
+
+        // PyPi
+        param_pypi_public_url = "${params.PyPiPublicUrl}"
+        param_pypi_public_creds = "pypi_public_cred"
+        param_pypi_private_url = "${params.PyPiPrivateUrl}"
+        param_pypi_private_creds = "nexus-local-repository"
+        param_pypi_publishing_enabled = "${PyPiPublishingEnabled}"
+
+        param_dockerhub_publishing_enabled = "${params.DockerHubPublishingEnabled}"
+    }
+
+    stages {
+        stage('Checkout and set build vars') {
+            steps {
+                cleanWs()
+                checkout scm
+                script {
+                    sh 'echo RunningOn: $(curl http://checkip.amazonaws.com/)'
+
+                    // import Legion components
+                    sshagent(["${env.legionCicdGitlabKey}"]) {
+                        print("Checkout Legion-cicd repo")
+                        sh """#!/bin/bash -ex
+                        mkdir -p \$(getent passwd \$(whoami) | cut -d: -f6)/.ssh && ssh-keyscan git.epam.com >> \$(getent passwd \$(whoami) | cut -d: -f6)/.ssh/known_hosts
+                        if [ ! -d "legion-cicd" ]; then
+                            git clone ${env.param_legion_cicd_repo} legion-cicd
+                        fi
+                        cd legion-cicd && git checkout ${env.param_legion_cicd_branch}
+                        """
+
+                        print("Load legion pipeline common library")
+                        cicdLibrary = load "${env.sharedLibPath}"
+                    }
+
+                    verFiles = [
+                            'packagers/rest/odahuflow/packager/rest/version.py',
+                    ]
+                    cicdLibrary.setBuildMeta(verFiles)
+                }
+            }
+        }
+
+        // Set Git Tag in case of stable release
+        stage('Set GIT release Tag') {
+            steps {
+                script {
+                    print(env.param_stable_release)
+                    if (env.param_stable_release.toBoolean() && env.param_push_git_tag.toBoolean()) {
+                        cicdLibrary.setGitReleaseTag("${env.param_git_deploy_key}")
+                    } else {
+                        print("Skipping release git tag push")
+                    }
+                }
+            }
+        }
+
+        stage("Build Docker images") {
+            parallel {
+                stage("Build REST packager Docker image") {
+                    steps {
+                        script {
+                            cicdLibrary.buildLegionImage('odahuflow-rest-packager', '.', 'containers/rest/Dockerfile')
+                        }
+                    }
+                }
+                stage('Build resource applier Docker image') {
+                    steps {
+                        script {
+                            cicdLibrary.buildLegionImage('odahuflow-packager-resource-applier', '.', 'containers/resource-applier/Dockerfile')
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Upload artifacts') {
+            parallel {
+                stage('Package and upload helm charts') {
+                    steps {
+                        script {
+                            cicdLibrary.uploadHelmCharts(env.pathToCharts)
+                        }
+                    }
+                }
+                stage("Upload PyPi Legion packages") {
+                    steps {
+                        script {
+                            cicdLibrary.publishPythonPackage("packagers/rest", env.param_pypi_private_creds, env.param_pypi_private_url, env.param_pypi_publishing_enabled, env.param_pypi_public_creds, env.param_pypi_public_url)
+                        }
+                    }
+                }
+                stage("Upload REST packager Docker image") {
+                    steps {
+                        script {
+                            cicdLibrary.uploadDockerImage('odahuflow-rest-packager', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
+                        }
+                    }
+                }
+                stage("Upload resource applier Docker image") {
+                    steps {
+                        script {
+                            cicdLibrary.uploadDockerImage('odahuflow-packager-resource-applier', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("Update Legion version string") {
+            steps {
+                script {
+                    if (env.param_stable_release.toBoolean() && env.param_update_version_string.toBoolean()) {
+                        cicdLibrary.updateVersionString(env.versionFile)
+                    } else {
+                        print("Skipping version string update")
+                    }
+                }
+            }
+        }
+
+        stage('Update Master branch') {
+            steps {
+                script {
+                    if (env.param_update_master.toBoolean()) {
+                        cicdLibrary.updateMasterBranch()
+                    } else {
+                        print("Skipping Master branch update")
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                // import Legion components
+                sshagent(["${env.legionCicdGitlabKey}"]) {
+                    print("Checkout Legion-cicd repo")
+                    sh """#!/bin/bash -ex
+                      mkdir -p \$(getent passwd \$(whoami) | cut -d: -f6)/.ssh && ssh-keyscan git.epam.com >> \$(getent passwd \$(whoami) | cut -d: -f6)/.ssh/known_hosts
+                      if [ ! -d "legion-cicd" ]; then
+                      git clone ${env.param_legion_cicd_repo} legion-cicd
+                      fi
+                      cd legion-cicd && git checkout ${env.param_legion_cicd_branch}
+                    """
+                    print("Load legion pipeline common library")
+                    legion = load "${env.sharedLibPath}"
+                }
+                dir("${WORKSPACE}/legion-cicd") {
+                    cicdLibrary.notifyBuild(currentBuild.currentResult)
+                }
+            }
+            deleteDir()
+        }
+    }
+}

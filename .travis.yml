@@ -1,0 +1,31 @@
+language: python
+dist: bionic
+python: 3.6
+sudo: true
+services:
+  - docker
+install: skip
+jobs:
+  include:
+    - stage: security
+      before_script:
+        - sudo make install-vulnerabilities-checker
+      script:
+        - make check-vulnerabilities
+    - stage: unit tests
+      before_script:
+        - make install-rest-packer
+        - make install-rest-packer-tests
+      script:
+        - make test-rest-packer
+    - stage: docker builds
+      script:
+        - make docker-build-rest-packager
+    - script:
+        - make docker-build-resource-applier
+    - stage: lint
+      before_script:
+        - make install-rest-packer
+        - make install-rest-packer-tests
+      script:
+        - make lint-rest-packer
