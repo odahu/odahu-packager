@@ -53,7 +53,7 @@ setup(
     },
     install_requires=[
         # TODO: change to PyPi when we publish release
-        'odahuflow-sdk @ git+https://github.com/odahu/odahu-flow@feat/1079-migration#egg=odahuflow-sdk&subdirectory=odahuFlow/sdk',
+        'odahuflow-sdk @ git+https://github.com/odahu/odahu-flow@1.0.0-rc26#egg=odahuflow-sdk&subdirectory=odahuFlow/sdk',
         'click>=7.0',
         'urllib3>=1.24.3',
         'pyyaml>=3.1.2',
