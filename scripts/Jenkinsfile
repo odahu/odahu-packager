@@ -129,14 +129,14 @@ pipeline {
                 stage("Build REST packager Docker image") {
                     steps {
                         script {
-                            cicdLibrary.buildLegionImage('odahuflow-rest-packager', '.', 'containers/rest/Dockerfile')
+                            cicdLibrary.buildLegionImage('odahu-flow-rest-packager', '.', 'containers/rest/Dockerfile')
                         }
                     }
                 }
                 stage('Build resource applier Docker image') {
                     steps {
                         script {
-                            cicdLibrary.buildLegionImage('odahuflow-packager-resource-applier', '.', 'containers/resource-applier/Dockerfile')
+                            cicdLibrary.buildLegionImage('odahu-flow-packager-resource-applier', '.', 'containers/resource-applier/Dockerfile')
                         }
                     }
                 }
@@ -162,14 +162,14 @@ pipeline {
                 stage("Upload REST packager Docker image") {
                     steps {
                         script {
-                            cicdLibrary.uploadDockerImage('odahuflow-rest-packager', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
+                            cicdLibrary.uploadDockerImage('odahu-flow-rest-packager', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
                         }
                     }
                 }
                 stage("Upload resource applier Docker image") {
                     steps {
                         script {
-                            cicdLibrary.uploadDockerImage('odahuflow-packager-resource-applier', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
+                            cicdLibrary.uploadDockerImage('odahu-flow-packager-resource-applier', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
                         }
                     }
                 }
