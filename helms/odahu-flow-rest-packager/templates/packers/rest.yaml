@@ -10,8 +10,8 @@ data:
     kind: PackagingIntegration
     id: docker-rest
     spec:
-      entrypoint: "/usr/local/bin/odahuflow-pack-to-rest"
-      defaultImage: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.packagers.rest "tpl" "%sodahuflow-rest-packager:%s") }}"
+      entrypoint: "/usr/local/bin/odahu-flow-pack-to-rest"
+      defaultImage: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.packagers.rest "tpl" "%sodahu-flow-rest-packager:%s") }}"
       privileged: true
       schema:
         targets:
@@ -129,14 +129,14 @@ spec:
         - name: packager-resources-uploader
           env:
             - name: EDI_URL
-              value: http://odahuflow-edi.{{ .Release.Namespace }}.svc.cluster.local
-          image: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.resources_applier "tpl" "%sodahuflow-packager-resource-applier:%s") }}"
+              value: http://odahu-flow-api.{{ .Release.Namespace }}.svc.cluster.local
+          image: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.resources_applier "tpl" "%sodahu-flow-packager-resource-applier:%s") }}"
           volumeMounts:
-            - mountPath: /opt/odahuflow-resources
+            - mountPath: /opt/odahu-flow-resources
               name: resources
           command:
             - odahuflowctl
             - bulk
             - apply
-            - /opt/odahuflow-resources/resources.yaml
+            - /opt/odahu-flow-resources/resources.yaml
 {{- end }}

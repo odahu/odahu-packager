@@ -7,7 +7,7 @@ include packagers/rest/Makefile
 
 ## docker-build-resource-applier: Build resource applier docker image
 docker-build-resource-applier:
-	docker build -t odahuflow/resource-applier:${BUILD_TAG} -f containers/resource-applier/Dockerfile .
+	docker build -t odahu/resource-applier:${BUILD_TAG} -f containers/resource-applier/Dockerfile .
 
 ## install-vulnerabilities-checker: Install the vulnerabilities-checker
 install-vulnerabilities-checker:

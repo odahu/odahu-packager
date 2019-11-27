@@ -19,7 +19,7 @@ ENV DEBIAN_FRONTEND="noninteractive" \
     LANG="C.UTF-8" \
     LANGUAGE="C:en" \
     LC_ALL="C.UTF-8" \
-    WORK_DIR="/opt/odahuflow"
+    WORK_DIR="/opt/odahu-flow"
 
 WORKDIR "${WORK_DIR}/"
 ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh

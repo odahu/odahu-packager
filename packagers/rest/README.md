@@ -20,7 +20,7 @@ using your favourite package management tool (pip, pipenv or etc.).
 
 ## Usage
 
-To run packager, please [install it](#installation) and call `odahuflow-pack-to-rest` script from CLI,
+To run packager, please [install it](#installation) and call `odahu-flow-pack-to-rest` script from CLI,
 or import `odahuflow.packager.rest` module and call `work` function.
 
 This function accepts path to saved model (path to zip archive or already unpacked directory)

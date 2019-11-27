@@ -38,7 +38,7 @@ def extract_version() -> str:
             raise RuntimeError("Unable to find version string in %s." % (file_content,))
 
 setup(
-    name='odahuflow-rest-packager',
+    name='odahu-flow-rest-packager',
     version=extract_version(),
     description='Legion\'s GPPI to rest CLI',
     packages=find_namespace_packages(),
@@ -48,12 +48,12 @@ setup(
     license='Apache v2',
     entry_points={
         'console_scripts': [
-            'odahuflow-pack-to-rest=odahuflow.packager.rest:work_resource_file'
+            'odahu-flow-pack-to-rest=odahuflow.packager.rest:work_resource_file'
         ],
     },
     install_requires=[
         # TODO: change to PyPi when we publish release
-        'odahuflow-sdk @ git+https://github.com/odahu/odahu-flow@feat/1079-migration#egg=odahuflow-sdk&subdirectory=odahuFlow/sdk',
+        'odahu-flow-sdk @ git+https://github.com/odahu/odahu-flow@1.0.0-rc27#egg=odahu-flow-sdk&subdirectory=packages/sdk',
         'click>=7.0',
         'urllib3>=1.24.3',
         'pyyaml>=3.1.2',
