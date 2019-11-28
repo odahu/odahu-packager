@@ -128,7 +128,7 @@ spec:
       containers:
         - name: packager-resources-uploader
           env:
-            - name: EDI_URL
+            - name: API_URL
               value: http://odahu-flow-api.{{ .Release.Namespace }}.svc.cluster.local
           image: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.resources_applier "tpl" "%sodahu-flow-packager-resource-applier:%s") }}"
           volumeMounts:
