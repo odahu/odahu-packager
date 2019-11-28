@@ -4,6 +4,10 @@
 # Type: string
 imagesRegistry: odahu/
 
+# Odahuflow API url
+# Type: string
+apiUrl: http://odahu-flow-api.odahu-flow.svc.cluster.local
+
 # Version of Toolchain
 # By default .Chart.AppVersion version is used
 # Type: string
@@ -18,6 +22,15 @@ odahuflowctl:
 packagers:
   rest:
     # REST packager could be disabled
+    # Type: bool
+    enabled: true
+
+    # This variable can be uncommented to setup custom image name for REST packager
+    # Type: string
+    # image: custom-image:1.0
+
+  cli:
+    # CLI packager could be disabled
     # Type: bool
     enabled: true
 

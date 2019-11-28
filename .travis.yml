@@ -14,16 +14,16 @@ jobs:
         - make check-vulnerabilities
     - stage: unit tests
       before_script:
-        - make install-rest-packer
-        - make install-rest-packer-tests
+        - make install-docker-packer
+        - make install-docker-packer-tests
       script:
-        - make test-rest-packer
+        - make test-docker-packer
     - stage: docker builds
       script:
-        - make docker-build-rest-packager
+        - make docker-build-docker-packager
     - stage: lint
       before_script:
-        - make install-rest-packer
-        - make install-rest-packer-tests
+        - make install-docker-packer
+        - make install-docker-packer-tests
       script:
-        - make lint-rest-packer
+        - make lint-docker-packer
