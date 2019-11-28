@@ -16,8 +16,8 @@
 
 import re
 
-from odahuflow.packager.rest.data_models import DEFAULT_IMAGE_NAME_TEMPLATE
-from odahuflow.packager.rest.utils import build_image_name, TemplateNameValues
+from odahuflow.packager.helpers.data_models import DEFAULT_IMAGE_NAME_TEMPLATE
+from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
 
 
 def test_without_template() -> None:

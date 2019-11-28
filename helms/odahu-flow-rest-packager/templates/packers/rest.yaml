@@ -94,7 +94,67 @@ data:
               parameters:
                 - name: description
                   value: |
-                    {{`This option provides a way to specify the Docker image name. You can hardcode the full name or specify a template. Available template values:
+                      {{`This option provides a way to specify the Docker image name. You can hardcode the full name or specify a template. Available template values:
+                      - Name (Model Name)
+                      - Version (Model Version)
+                      - RandomUUID
+                    The default value is '{{ Name }}/{{ Version }}:{{ RandomUUID }}'.
+                    Image name examples:
+                      - myservice:123
+                      - {{ Name }}:{{ Version }}`}}
+                - name: type
+                  value: string
+                - name: default
+                  value: ""
+    ---
+    kind: PackagingIntegration
+    id: docker-cli
+    spec:
+      entrypoint: "/usr/local/bin/odahu-flow-pack-to-cli"
+      defaultImage: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.packagers.rest "tpl" "%sodahu-flow-rest-packager:%s") }}"
+      privileged: true
+      schema:
+        targets:
+          - name: docker-push
+            connectionTypes: ["docker", "ecr"]
+            required: true
+          - name: docker-pull
+            connectionTypes: ["docker", "ecr"]
+            required: false
+          - name: archive-storage
+            connectionTypes: ["s3", "gcs", "azureblob"]
+            required: false
+        arguments:
+          properties:
+            - name: dockerfileAddCondaInstallation
+              parameters:
+                - name: description
+                  value: Add conda installation code to Dockerfile
+                - name: type
+                  value: boolean
+                - name: default
+                  value: true
+            - name: dockerfileBaseImage
+              parameters:
+                - name: description
+                  value: Base image for Dockerfile.
+                - name: type
+                  value: string
+                - name: default
+                  value: 'python:3.6'
+            - name: dockerfileCondaEnvsLocation
+              parameters:
+                - name: description
+                  value: Conda env location in Dockerfile.
+                - name: type
+                  value: string
+                - name: default
+                  value: /opt/conda/envs/
+            - name: imageName
+              parameters:
+                - name: description
+                  value: |
+                      {{`This option provides a way to specify the Docker image name. You can hardcode the full name or specify a template. Available template values:
                       - Name (Model Name)
                       - Version (Model Version)
                       - RandomUUID

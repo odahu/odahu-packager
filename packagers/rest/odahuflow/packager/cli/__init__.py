@@ -16,4 +16,4 @@
 """
 Init file
 """
-from odahuflow.packager.rest.packager import work, work_resource_file
+from odahuflow.packager.cli.packager import work, work_resource_file

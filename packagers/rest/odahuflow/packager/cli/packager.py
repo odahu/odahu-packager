@@ -17,6 +17,8 @@ import logging
 import tempfile
 
 import click
+from odahuflow.packager.cli.data_models import PackagingResourceArguments
+from odahuflow.packager.cli.pipeline import work
 from odahuflow.packager.helpers.constants import TARGET_DOCKER_REGISTRY, DOCKERFILE_TEMPLATE, \
     PULL_DOCKER_REGISTRY
 from odahuflow.packager.helpers.docker_builder import build_docker_image
@@ -24,8 +26,6 @@ from odahuflow.packager.helpers.io_proc_utils import setup_logging, remove_direc
 from odahuflow.packager.helpers.manifest_and_resource import parse_resource_file, extract_connection_from_resource, \
     save_result
 from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
-from odahuflow.packager.rest.data_models import PackagingResourceArguments
-from odahuflow.packager.rest.pipeline import work
 
 
 @click.command()
@@ -45,13 +45,7 @@ def work_resource_file(model, resource_file, verbose):
     output_folder = tempfile.mkdtemp()
     logging.info('Using %r as temporary directory', output_folder)
 
-    manifest = work(model,
-                    output_folder,
-                    conda_env='create',
-                    ignore_conda=True,
-                    conda_env_name='',
-                    dockerfile=True,
-                    arguments=arguments)
+    manifest = work(model, output_folder, arguments)
 
     # Check if docker target is set
     docker_pull_connection = extract_connection_from_resource(resource_info, PULL_DOCKER_REGISTRY)

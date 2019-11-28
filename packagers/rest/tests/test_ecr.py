@@ -14,7 +14,7 @@
 #    limitations under the License.
 #
 import pytest
-from odahuflow.packager.rest.extensions.ecr import get_ecr_credentials, extract_repository_from_ecr_url, ECRRegistry
+from odahuflow.packager.helpers.extensions.ecr import get_ecr_credentials, extract_repository_from_ecr_url, ECRRegistry
 from odahuflow.sdk.models import ConnectionSpec
 
 

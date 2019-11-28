@@ -13,7 +13,8 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-"""
-Init file
-"""
-from odahuflow.packager.rest.packager import work, work_resource_file
+from odahuflow.packager.cli.packager import work_resource_file
+
+
+if __name__ == '__main__':
+    work_resource_file()  # pylint: disable=E1120

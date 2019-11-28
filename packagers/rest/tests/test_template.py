@@ -14,7 +14,7 @@
 #    limitations under the License.
 #
 
-from odahuflow.packager.rest.constants import DESCRIPTION_TEMPLATE
+from odahuflow.packager.helpers.constants import DESCRIPTION_TEMPLATE
 from odahuflow.packager.rest.template import render_packager_template
 
 

@@ -20,13 +20,15 @@ import shutil
 import uuid
 
 import yaml
-from odahuflow.packager.rest.constants import LEGION_SUB_PATH_NAME, RESOURCES_FOLDER, HANDLER_MODULE, CONDA_FILE_NAME, \
+from odahuflow.packager.helpers.constants import LEGION_SUB_PATH_NAME, RESOURCES_FOLDER, HANDLER_MODULE, \
+    CONDA_FILE_NAME, \
     ENTRYPOINT_TEMPLATE, ENTRYPOINT_DOCKER_TEMPLATE, HANDLER_APP, DESCRIPTION_TEMPLATE, \
     DOCKERFILE_CONDA_INST_INSTRUCTIONS_TEMPLATE, DOCKERFILE_TEMPLATE
-from odahuflow.packager.rest.data_models import PackagingResourceArguments, LegionProjectManifest
-from odahuflow.packager.rest.io_proc_utils import make_executable, run
-from odahuflow.packager.rest.manifest_and_resource import validate_model_manifest, get_model_manifest
-from odahuflow.packager.rest.template import DockerTemplateContext, render_packager_template
+from odahuflow.packager.helpers.data_models import LegionProjectManifest
+from odahuflow.packager.helpers.io_proc_utils import make_executable, run
+from odahuflow.packager.helpers.manifest_and_resource import validate_model_manifest, get_model_manifest
+from odahuflow.packager.rest.data_models import PackagingResourceArguments, DockerTemplateContext
+from odahuflow.packager.rest.template import render_packager_template
 from odahuflow.packager.rest.version import __version__
 
 

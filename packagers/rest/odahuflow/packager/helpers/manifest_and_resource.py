@@ -19,9 +19,8 @@ import typing
 
 import pydantic
 import yaml
-
-from odahuflow.packager.rest.constants import PROJECT_FILE, RESULT_FILE_NAME, DOCKER_IMAGE_RESULT
-from odahuflow.packager.rest.data_models import LegionProjectManifest
+from odahuflow.packager.helpers.constants import PROJECT_FILE, RESULT_FILE_NAME, DOCKER_IMAGE_RESULT
+from odahuflow.packager.helpers.data_models import LegionProjectManifest
 from odahuflow.sdk.models import K8sPackager, Connection
 
 

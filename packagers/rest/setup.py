@@ -48,12 +48,12 @@ setup(
     license='Apache v2',
     entry_points={
         'console_scripts': [
-            'odahu-flow-pack-to-rest=odahuflow.packager.rest:work_resource_file'
+            'odahu-flow-pack-to-rest=odahuflow.packager.rest:work_resource_file',
+            'odahu-flow-pack-to-cli=odahuflow.packager.cli:work_resource_file'
         ],
     },
     install_requires=[
-        # TODO: change to PyPi when we publish release
-        'odahu-flow-sdk @ git+https://github.com/odahu/odahu-flow@1.0.0-rc27#egg=odahu-flow-sdk&subdirectory=packages/sdk',
+        'odahu-flow-sdk==1.0.0rc29',
         'click>=7.0',
         'urllib3>=1.24.3',
         'pyyaml>=3.1.2',

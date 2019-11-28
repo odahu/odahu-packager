@@ -22,8 +22,8 @@ import os
 import typing
 
 import docker
-from odahuflow.packager.rest.extensions.ecr import ECR_CONNECTION_TYPE, get_ecr_credentials
-from odahuflow.packager.rest.io_proc_utils import run
+from odahuflow.packager.helpers.extensions.ecr import ECR_CONNECTION_TYPE, get_ecr_credentials
+from odahuflow.packager.helpers.io_proc_utils import run
 from odahuflow.sdk.models import Connection
 
 BUILDAH_BIN = os.getenv('BUILDAH_BIN', 'buildah')
