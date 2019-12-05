@@ -5,10 +5,6 @@ include packagers/rest/Makefile
 
 .DEFAULT_GOAL := help
 
-## docker-build-resource-applier: Build resource applier docker image
-docker-build-resource-applier:
-	docker build -t odahu/resource-applier:${BUILD_TAG} -f containers/resource-applier/Dockerfile .
-
 ## install-vulnerabilities-checker: Install the vulnerabilities-checker
 install-vulnerabilities-checker:
 	./scripts/install-git-secrets-hook.sh install_binaries

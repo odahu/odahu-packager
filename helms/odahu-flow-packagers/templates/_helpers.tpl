@@ -200,7 +200,7 @@ Arguments:
 {{- define "odahuflow.image-name" -}}
 {{- if .service }}
 {{- if (hasKey .service "image") }}
-{{ .service.image  }}
+{{- .service.image }}
 {{- else -}}
 {{- include "odahuflow.default-image-name" . -}}
 {{ end }}
