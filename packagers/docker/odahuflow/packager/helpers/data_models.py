@@ -60,5 +60,3 @@ class LegionProjectManifest(pydantic.BaseModel):
     model: typing.Optional[LegionProjectManifestModel]
     odahuflowVersion: typing.Optional[str]
     toolchain: typing.Optional[LegionProjectManifestToolchain]
-
-

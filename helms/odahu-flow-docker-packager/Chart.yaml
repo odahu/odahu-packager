@@ -1,7 +1,7 @@
-name: odahu-flow-rest-packager
+name: odahu-flow-docker-packager
 version: 0.0.1
 appVersion: 1.7.1
-description: Legion stack
+description: Odahu stack
 keywords:
 - ML
 maintainers:

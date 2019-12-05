@@ -19,7 +19,7 @@ import re
 from setuptools import find_namespace_packages, setup
 
 PACKAGE_ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
-VERSION_FILE = os.path.join(PACKAGE_ROOT_PATH, 'odahuflow/packager/rest', 'version.py')
+VERSION_FILE = os.path.join(PACKAGE_ROOT_PATH, 'odahuflow/packager', 'version.py')
 
 
 def extract_version() -> str:
@@ -53,7 +53,7 @@ setup(
         ],
     },
     install_requires=[
-        'odahu-flow-sdk>=1.0.0rc29',
+        'odahu-flow-sdk @ git+https://github.com/odahu/odahu-flow@develop#egg=odahu-flow-sdk&subdirectory=packages/sdk',
         'click>=7.0',
         'urllib3>=1.24.3',
         'pyyaml>=3.1.2',

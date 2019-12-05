@@ -24,3 +24,6 @@ packagers:
     # This variable can be uncommented to setup custom image name for REST packager
     # Type: string
     # image: custom-image:1.0
+
+  cli:
+    enabled: true

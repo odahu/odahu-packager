@@ -103,7 +103,7 @@ pipeline {
                     }
 
                     verFiles = [
-                            'packagers/rest/odahuflow/packager/rest/version.py',
+                            'packagers/docker/odahuflow/packager/version.py',
                     ]
                     cicdLibrary.setBuildMeta(verFiles)
                 }
@@ -126,10 +126,10 @@ pipeline {
 
         stage("Build Docker images") {
             parallel {
-                stage("Build REST packager Docker image") {
+                stage("Build docker packager Docker image") {
                     steps {
                         script {
-                            cicdLibrary.buildLegionImage('odahu-flow-rest-packager', '.', 'containers/rest/Dockerfile')
+                            cicdLibrary.buildLegionImage('odahu-flow-docker-packager', '.', 'containers/docker/Dockerfile')
                         }
                     }
                 }
@@ -155,14 +155,14 @@ pipeline {
                 stage("Upload PyPi Legion packages") {
                     steps {
                         script {
-                            cicdLibrary.publishPythonPackage("packagers/rest", env.param_pypi_private_creds, env.param_pypi_private_url, env.param_pypi_publishing_enabled, env.param_pypi_public_creds, env.param_pypi_public_url)
+                            cicdLibrary.publishPythonPackage("packagers/docker", env.param_pypi_private_creds, env.param_pypi_private_url, env.param_pypi_publishing_enabled, env.param_pypi_public_creds, env.param_pypi_public_url)
                         }
                     }
                 }
-                stage("Upload REST packager Docker image") {
+                stage("Upload docker packager Docker image") {
                     steps {
                         script {
-                            cicdLibrary.uploadDockerImage('odahu-flow-rest-packager', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
+                            cicdLibrary.uploadDockerImage('odahu-flow-docker-packager', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
                         }
                     }
                 }

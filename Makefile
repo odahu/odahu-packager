@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 -include .env
-include packagers/rest/Makefile
+include packagers/docker/Makefile
 
 .DEFAULT_GOAL := help
 

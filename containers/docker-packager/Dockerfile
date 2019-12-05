@@ -35,9 +35,9 @@ RUN wget https://github.com/krallin/tini/releases/download/v0.18.0/tini-amd64 -q
 
 RUN pip3 install --disable-pip-version-check --upgrade pip==18.1 pipenv==2018.10.13
 
-COPY containers/rest/registries.conf \
-     containers/rest/storage.conf \
+COPY containers/docker-packager/registries.conf \
+     containers/docker-packager/storage.conf \
        /etc/containers/
 
-COPY packagers/rest "${WORK_DIR}/packagers/rest"
-RUN pip3 install -e packagers/rest
+COPY packagers/docker "${WORK_DIR}/packagers/docker"
+RUN pip3 install -e packagers/docker
