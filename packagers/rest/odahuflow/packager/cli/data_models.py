@@ -1,6 +1,5 @@
 import pydantic
-
-DEFAULT_IMAGE_NAME_TEMPLATE = "{{ Name }}-{{ Version }}:{{ RandomUUID }}"
+from odahuflow.packager.helpers.constants import DEFAULT_IMAGE_NAME_TEMPLATE
 
 
 class PackagingResourceArguments(pydantic.BaseModel):
@@ -10,7 +9,7 @@ class PackagingResourceArguments(pydantic.BaseModel):
 
     dockerfilePush: bool = True
     dockerfileAddCondaInstallation: bool = True
-    dockerfileBaseImage: str = 'nexus.ailifecycle.org:443/odahu/odahu-flow-cli:1.0.0-dev1575045866018'
+    dockerfileBaseImage: str = 'python:3.6'
     dockerfileCondaEnvsLocation: str = '/opt/conda/envs/'
     # Full name or Jinja template
     imageName: str = DEFAULT_IMAGE_NAME_TEMPLATE
@@ -27,3 +26,9 @@ class DockerTemplateContext(pydantic.BaseModel):
     model_name: str
     model_version: str
     model_location: str
+    gppi_location: str
+    conda_installation_content: str
+    entrypoint_invoker_script: str  # script that invoke gppi entrypoint
+    entrypoint_invoker_cli_name: str  # cli (refers to ::main():: of ::entrypoint_invoker_script::)
+    entrypoint: str  # entrypoint that is described in GPPI manifest
+    package_name: str

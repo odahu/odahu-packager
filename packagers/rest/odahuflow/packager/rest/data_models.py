@@ -1,5 +1,5 @@
 import pydantic
-from odahuflow.packager.helpers.data_models import DEFAULT_IMAGE_NAME_TEMPLATE
+from odahuflow.packager.helpers.constants import DEFAULT_IMAGE_NAME_TEMPLATE
 
 
 class PackagingResourceArguments(pydantic.BaseModel):

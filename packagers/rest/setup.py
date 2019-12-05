@@ -53,7 +53,7 @@ setup(
         ],
     },
     install_requires=[
-        'odahu-flow-sdk==1.0.0rc29',
+        'odahu-flow-sdk>=1.0.0rc29',
         'click>=7.0',
         'urllib3>=1.24.3',
         'pyyaml>=3.1.2',

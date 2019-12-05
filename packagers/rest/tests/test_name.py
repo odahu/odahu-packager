@@ -16,7 +16,7 @@
 
 import re
 
-from odahuflow.packager.helpers.data_models import DEFAULT_IMAGE_NAME_TEMPLATE
+from odahuflow.packager.helpers.constants import DEFAULT_IMAGE_NAME_TEMPLATE
 from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
 
 

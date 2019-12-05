@@ -26,6 +26,7 @@ from odahuflow.packager.helpers.io_proc_utils import setup_logging, remove_direc
 from odahuflow.packager.helpers.manifest_and_resource import parse_resource_file, extract_connection_from_resource, \
     save_result
 from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
+from odahuflow.sdk.models import Connection
 
 
 @click.command()
@@ -48,8 +49,8 @@ def work_resource_file(model, resource_file, verbose):
     manifest = work(model, output_folder, arguments)
 
     # Check if docker target is set
-    docker_pull_connection = extract_connection_from_resource(resource_info, PULL_DOCKER_REGISTRY)
-    docker_target_connection = extract_connection_from_resource(resource_info, TARGET_DOCKER_REGISTRY)
+    docker_pull_connection: Connection = extract_connection_from_resource(resource_info, PULL_DOCKER_REGISTRY)
+    docker_target_connection: Connection = extract_connection_from_resource(resource_info, TARGET_DOCKER_REGISTRY)
 
     image_name = build_image_name(arguments.imageName,
                                   TemplateNameValues(Name=manifest.model.name, Version=manifest.model.version))

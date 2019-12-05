@@ -18,9 +18,12 @@ import os.path
 import shutil
 import uuid
 
+from odahuflow.sdk.gppi import entrypoint_invoke
+from odahuflow.packager.cli.constants import PACKAGE_NAME, ENTRYPOINT_INVOKER_SCRIPT, ENTRYPOINT_INVOKER_CLI_NAME
 from odahuflow.packager.cli.data_models import DockerTemplateContext, PackagingResourceArguments
 from odahuflow.packager.cli.template import render_packager_template
-from odahuflow.packager.helpers.constants import DOCKERFILE_TEMPLATE
+from odahuflow.packager.helpers.constants import DOCKERFILE_TEMPLATE, LEGION_SUB_PATH_NAME, GPPI_LOCATION, \
+    DOCKERFILE_CONDA_INST_INSTRUCTIONS_TEMPLATE
 from odahuflow.packager.helpers.manifest_and_resource import validate_model_manifest, get_model_manifest
 
 
@@ -37,6 +40,7 @@ def work(model, output_folder, arguments: PackagingResourceArguments):
     :param dockerfile:
     :return: model manifest
     """
+
     # Use absolute paths
     model = os.path.abspath(model)
     output_folder = os.path.abspath(output_folder)
@@ -45,18 +49,40 @@ def work(model, output_folder, arguments: PackagingResourceArguments):
     manifest = get_model_manifest(model)
     validate_model_manifest(manifest)
 
-    logging.info('Model information - name: %s, version: %s', manifest.model.name, manifest.model.version)
-    # Copying of model to destination subdirectory
-    logging.info(f'Copying {model} to {output_folder}')
-    shutil.copytree(model, os.path.join(output_folder, 'gppi'))
     context = DockerTemplateContext(
-        model_location='gppi',
+        gppi_location=GPPI_LOCATION,
+        model_location=LEGION_SUB_PATH_NAME,
         conda_env_name=str(uuid.uuid4()),
         conda_file_name=manifest.binaries.conda_path,
         model_name=manifest.model.name,
         model_version=manifest.model.version,
-        base_image=arguments.dockerfileBaseImage
+        base_image=arguments.dockerfileBaseImage,
+        conda_installation_content=render_packager_template(DOCKERFILE_CONDA_INST_INSTRUCTIONS_TEMPLATE),
+        entrypoint_invoker_script=ENTRYPOINT_INVOKER_SCRIPT,
+        entrypoint_invoker_cli_name=ENTRYPOINT_INVOKER_CLI_NAME,
+        entrypoint=manifest.model.entrypoint,
+        package_name=PACKAGE_NAME
     )
+
+    logging.info('Model information - name: %s, version: %s', manifest.model.name, manifest.model.version)
+    # Copying of model to destination subdirectory
+    logging.info(f'Copying {model} to {output_folder}')
+    shutil.copytree(model, os.path.join(output_folder, GPPI_LOCATION))
+
+    # create gppi entrypoint invoker package
+    target_entrypoint = os.path.join(output_folder, PACKAGE_NAME, f'{ENTRYPOINT_INVOKER_SCRIPT}.py')
+    local_entrypoint = entrypoint_invoke.__file__
+    logging.info(f'Copying entrypoit invoker {local_entrypoint} to {target_entrypoint}')
+    os.makedirs(os.path.join(output_folder, PACKAGE_NAME), exist_ok=True)
+    open(os.path.join(output_folder, PACKAGE_NAME, '__init__.py'), 'a').close()
+    shutil.copy(local_entrypoint, target_entrypoint)
+
+    # copy cli setup
+    setup_content = render_packager_template('setup.py', context.dict())
+    setup_target = os.path.join(output_folder, 'setup.py')
+    logging.info(f'Dumping setup.py to {setup_target}')
+    with open(setup_target, 'w') as out_stream:
+        out_stream.write(setup_content)
 
     dockerfile_content = render_packager_template(DOCKERFILE_TEMPLATE, context.dict())
     dockerfile_target = os.path.join(output_folder, DOCKERFILE_TEMPLATE)
@@ -65,5 +91,3 @@ def work(model, output_folder, arguments: PackagingResourceArguments):
         out_stream.write(dockerfile_content)
 
     return manifest
-
-

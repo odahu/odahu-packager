@@ -18,8 +18,11 @@ Tool constants
 """
 import os
 
+DEFAULT_IMAGE_NAME_TEMPLATE = "{{ Name }}-{{ Version }}:{{ RandomUUID }}"
+
 PROJECT_FILE = 'odahuflow.project.yaml'
 LEGION_SUB_PATH_NAME = 'odahuflow_model'
+GPPI_LOCATION = 'gppi'
 CONDA_FILE_NAME = 'conda.yaml'
 RESOURCES_FOLDER = os.path.join(os.path.dirname(__file__), 'resources')
 ENTRYPOINT_TEMPLATE = 'entrypoint.sh'
