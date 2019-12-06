@@ -21,8 +21,6 @@ jobs:
     - stage: docker builds
       script:
         - make docker-build-rest-packager
-    - script:
-        - make docker-build-resource-applier
     - stage: lint
       before_script:
         - make install-rest-packer

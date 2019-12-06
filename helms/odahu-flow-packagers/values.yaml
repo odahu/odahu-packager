@@ -9,8 +9,8 @@ imagesRegistry: odahu/
 # Type: string
 # packagerVersion: "1.0"
 
-# Resource applier configuration
-resources_applier:
+# Odahuflow CLI
+odahuflowctl:
   # This variable can be uncommented to setup custom image name
   # Type: string
   # image: custom-image:1.0

@@ -38,7 +38,7 @@ def extract_version() -> str:
             raise RuntimeError("Unable to find version string in %s." % (file_content,))
 
 setup(
-    name='odahu-flow-rest-packager',
+    name='odahu-flow-docker-packager',
     version=extract_version(),
     description='Legion\'s GPPI to rest CLI',
     packages=find_namespace_packages(),
@@ -53,7 +53,7 @@ setup(
     },
     install_requires=[
         # TODO: change to PyPi when we publish release
-        'odahu-flow-sdk @ git+https://github.com/odahu/odahu-flow@1.0.0-rc27#egg=odahu-flow-sdk&subdirectory=packages/sdk',
+        'odahu-flow-sdk==1.0.0rc32',
         'click>=7.0',
         'urllib3>=1.24.3',
         'pyyaml>=3.1.2',
