@@ -9,7 +9,7 @@ PIP_EXTRA_INDEX_URL=
 docker-build-docker-packager:
 	docker build --build-arg PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} -t odahu/odahu-flow-packagers:${BUILD_TAG} -f containers/docker-packager/Dockerfile .
 
-## install-docker-packer: Instasll docker packer dependencies
+## install-docker-packer: Installs docker packer dependencies
 install-docker-packer:
 	cd packagers/docker && \
 		pip3 install ${BUILD_PARAMS} -e .
