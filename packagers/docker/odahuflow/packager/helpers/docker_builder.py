@@ -120,7 +120,7 @@ def build_docker_image_buildah(context,
         *_extract_buildah_credentials(push_connection, remote_tag),
         remote_tag
     ]
-    run(*push_args)
+    run(*push_args, sensitive=True)
 
 
 def _authorize_docker(client: docker.DockerClient, connection: Connection):
