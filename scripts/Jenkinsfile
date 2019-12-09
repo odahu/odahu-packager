@@ -89,7 +89,7 @@ pipeline {
                     }
 
                     verFiles = [
-                            'packagers/rest/odahuflow/packager/rest/version.py',
+                            'packagers/docker/odahuflow/packager/version.py',
                     ]
                     cicdLibrary.setBuildMeta(verFiles)
                 }
@@ -98,10 +98,10 @@ pipeline {
 
         stage("Build Docker images") {
             parallel {
-                stage("Build REST packager Docker image") {
+                stage("Build docker packager Docker image") {
                     steps {
                         script {
-                            cicdLibrary.buildDockerImage('odahu-flow-packagers', '.', 'containers/rest/Dockerfile')
+                            cicdLibrary.buildDockerImage('odahu-flow-packagers', '.', 'containers/docker-packager/Dockerfile')
                         }
                     }
                 }
@@ -117,7 +117,7 @@ pipeline {
                         }
                     }
                 }
-                stage("Upload REST packager Docker image") {
+                stage("Upload docker packager Docker image") {
                     steps {
                         script {
                             cicdLibrary.uploadDockerImage('odahu-flow-packagers', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())

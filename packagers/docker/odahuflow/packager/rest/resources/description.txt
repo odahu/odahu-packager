@@ -1,0 +1,6 @@
+This directory contains HTTP service for serving prediction API for Odahu's models.
+
+Model name: {{ model_name }}
+Model version: {{ model_version }}
+Odahu version: {{ odahuflow_version }}
+Packer version: {{ packager_version }}
