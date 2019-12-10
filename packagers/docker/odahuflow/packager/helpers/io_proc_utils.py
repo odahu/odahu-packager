@@ -47,7 +47,7 @@ def setup_logging(verbose: bool = False) -> None:
                         level=log_level)
 
 
-def run(*args: str, cwd=None, stream_output: bool = True):
+def run(*args: str, cwd=None, stream_output: bool = True, sensitive: bool = True):
     """
     Run system command and stream / capture stdout and stderr
 
@@ -56,11 +56,13 @@ def run(*args: str, cwd=None, stream_output: bool = True):
     :param cwd: (Optional). Program working directory. Current is used if not provided.
     :type cwd: str
     :param stream_output: (Optional). Flag that enables streaming child process output to stdout and stderr.
+    :param sensitive: If true logging about run command will be skipped
     :return: typing.Union[int, typing.Tuple[int, str, str]] -- exit_code (for stream_output mode)
              or exit_code + stdout + stderr.
     """
     args_line = ' '.join(args)
-    logging.info(f'Running command "{args_line}"')
+    if not sensitive:
+        logging.info(f'Running command "{args_line}"')
 
     cmd_env = os.environ.copy()
     if stream_output:
