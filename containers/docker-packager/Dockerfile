@@ -33,11 +33,12 @@ RUN apt-get update -qq && \
 RUN wget https://github.com/krallin/tini/releases/download/v0.18.0/tini-amd64 -qO /bin/tiny && \
     chmod a+x /bin/tiny
 
-RUN pip3 install --disable-pip-version-check --upgrade pip==18.1 pipenv==2018.10.13
+RUN pip3 install --upgrade pip==19.3.1 setuptools==40.8.0
 
 COPY containers/docker-packager/registries.conf \
      containers/docker-packager/storage.conf \
        /etc/containers/
 
+ARG PIP_EXTRA_INDEX_URL
 COPY packagers/docker "${WORK_DIR}/packagers/docker"
 RUN pip3 install -e packagers/docker
