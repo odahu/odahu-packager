@@ -58,7 +58,7 @@ setup(
         'click>=7.0',
         'urllib3>=1.24.3',
         'pyyaml>=3.1.2',
-        'pydantic==0.32.2',
+        'pydantic>=1.2',
         'docker',
         'botocore>=1.12.75',
         'boto3>=1.9.75',
