@@ -54,7 +54,7 @@ setup(
     },
     install_requires=[
         # TODO: change to PyPi when we publish release
-        'odahu-flow-sdk==1.0.0rc32',
+        'odahu-flow-sdk==1.0.0rc35',
         'click>=7.0',
         'urllib3>=1.24.3',
         'pyyaml>=3.1.2',
