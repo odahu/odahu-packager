@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name='{{ model_name }}',
+    name='{{ distro_name }}',
     version='{{ model_version }}',
     description='Odahuflow cli packed {{ model_name }} model', packages=['odahuflow'],
     entry_points={

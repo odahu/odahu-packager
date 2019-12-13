@@ -61,7 +61,8 @@ def work(model, output_folder, arguments: PackagingResourceArguments):
         entrypoint_invoker_script=ENTRYPOINT_INVOKER_SCRIPT,
         entrypoint_invoker_cli_name=ENTRYPOINT_INVOKER_CLI_NAME,
         entrypoint=manifest.model.entrypoint,
-        package_name=PACKAGE_NAME
+        package_name=PACKAGE_NAME,
+        distro_name=f'{manifest.model.name}-{str(uuid.uuid4())[:8]}'
     )
 
     logging.info('Model information - name: %s, version: %s', manifest.model.name, manifest.model.version)

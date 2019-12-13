@@ -31,4 +31,5 @@ class DockerTemplateContext(pydantic.BaseModel):
     entrypoint_invoker_script: str  # script that invoke gppi entrypoint
     entrypoint_invoker_cli_name: str  # cli (refers to ::main():: of ::entrypoint_invoker_script::)
     entrypoint: str  # entrypoint that is described in GPPI manifest
-    package_name: str
+    package_name: str  # package name that  will be packed to distro (setuptools)
+    distro_name: str  # setuptools distributive name
