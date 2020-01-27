@@ -106,6 +106,7 @@ def build_docker_image_buildah(context,
     build_args = [
         BUILDAH_BIN, 'build-using-dockerfile',
         *_extract_buildah_credentials(pull_connection),
+        '--device', '/dev/fuse:rw',
         '--file', docker_file,
         '--format', 'docker',
         '--compress',
