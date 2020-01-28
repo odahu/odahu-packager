@@ -239,6 +239,10 @@ def predict():
     else:
         return build_error_response(f'Unknown model\'s return type: {SUPPORTED_PREDICTION_MODE}')
 
+    # handle_prediction_on_matrix & handle_prediction_on_objects can return Response in case of exception
+    if isinstance(response_json, Response):
+        return response_json
+
     resp = Response(response=response_json, status=200, mimetype='application/json')
 
     resp.headers[MODEL_NAME] = os.getenv(ODAHU_MODEL_NAME)
