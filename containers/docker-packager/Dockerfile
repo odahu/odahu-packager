@@ -14,14 +14,14 @@
 #    limitations under the License.
 #
 
-FROM fedora:31
+FROM quay.io/buildah/stable:v1.12.0
 
 ARG PIP_EXTRA_INDEX_URL
 ENV WORK_DIR="/opt/odahu-flow"
 WORKDIR "${WORK_DIR}/"
 
 RUN yum -y update && yum -y reinstall shadow-utils && \
-    yum -y install buildah runc fuse-overlayfs --exclude container-selinux && \
+    yum -y install runc --exclude container-selinux && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
 COPY containers/docker-packager/registries.conf \
