@@ -43,8 +43,4 @@ def build_image_name(name_template: str, values: TemplateNameValues) -> str:
     if not values.RandomUUID:
         values.RandomUUID = str(uuid.uuid4())
 
-    return Template(name_template).render(values.dict())
-
-
-def build_archive_name(model_name: str, model_version: str) -> str:
-    return f'{model_name}-{model_version}.zip'
+    return Template(name_template).render(values.dict()).lower()

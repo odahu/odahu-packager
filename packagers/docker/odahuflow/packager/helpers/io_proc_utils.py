@@ -17,7 +17,6 @@ import logging
 import os.path
 import stat
 import subprocess
-import zipfile
 
 LOGGER = logging.getLogger(__name__)
 
@@ -107,30 +106,3 @@ def remove_directory(path):
             raise Exception('Not a directory or file: %s' % path)
     finally:
         pass
-
-
-def create_zip_archive(source_folder: str, archive_name: str, target_folder: str):
-    """
-    Create ZIP archive named <archive_name> in <target_folder> from folder <source_folder>
-
-    :param source_folder: source folder
-    :type source_folder: str
-    :param archive_name: name of result archive (only file name, without folder)
-    :type archive_name: str
-    :param target_folder: target folder name (where archive will be placed)
-    :type target_folder: str
-    :return: str -- path to final archive
-    """
-    target_path = os.path.join(target_folder, archive_name)
-    source_folder = os.path.abspath(source_folder)
-
-    # Create archive
-    zip_file = zipfile.ZipFile(target_path, 'w', zipfile.ZIP_DEFLATED)
-    for root, _, files in os.walk(source_folder):
-        for file in files:
-            local_path = os.path.join(root, file)
-            arcname = local_path.replace(source_folder, '').lstrip(os.path.sep)
-            zip_file.write(local_path, arcname=arcname)
-    zip_file.close()
-
-    return target_path

@@ -1,6 +1,6 @@
 # Installing conda
 
-ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-4.7.12-Linux-x86_64.sh
+ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-4.5.11-Linux-x86_64.sh
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PATH="/opt/conda/bin:${PATH}"
