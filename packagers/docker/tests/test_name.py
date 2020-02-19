@@ -17,7 +17,8 @@
 import re
 
 from odahuflow.packager.helpers.constants import DEFAULT_IMAGE_NAME_TEMPLATE
-from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
+from odahuflow.packager.helpers.utils import build_image_name, \
+    TemplateNameValues
 
 
 def test_without_template() -> None:
@@ -26,19 +27,36 @@ def test_without_template() -> None:
     """
     docker_image_name = "test:1234"
 
-    result = build_image_name(docker_image_name, TemplateNameValues(Name='name', Version='version'))
+    result = build_image_name(docker_image_name, TemplateNameValues(
+        Name='name', Version='version'
+    ))
     assert docker_image_name == result
 
 
 def test_basic_template_name() -> None:
     result = build_image_name('{{ Name }}/{{ RandomUUID }}:{{ Version }}',
-                              TemplateNameValues(Name='name', Version='version', RandomUUID="1234"))
+                              TemplateNameValues(
+                                  Name='name',
+                                  Version='version',
+                                  RandomUUID="1234"
+                              ))
+    assert result == 'name/1234:version'
+
+
+def test_lower_case_name() -> None:
+    result = build_image_name('{{ Name }}/{{ RandomUUID }}:{{ Version }}',
+                              TemplateNameValues(
+                                  Name='NAME',
+                                  Version='VERSION',
+                                  RandomUUID="1234"
+                              ))
     assert result == 'name/1234:version'
 
 
 def test_empty_random_uuid() -> None:
     result = build_image_name('{{ Name }}/{{ RandomUUID }}:{{ Version }}',
-                              TemplateNameValues(Name='name', Version='version'))
+                              TemplateNameValues(Name='name',
+                                                 Version='version'))
 
     assert re.match(r'name/([\d\w\-]+):version', result)
 
@@ -48,6 +66,7 @@ def test_default_image_template_name() -> None:
     Check that the default image template works as expected
     """
     result = build_image_name(DEFAULT_IMAGE_NAME_TEMPLATE,
-                              TemplateNameValues(Name='name', Version='version'))
+                              TemplateNameValues(Name='name',
+                                                 Version='version'))
 
     assert re.match(r'name-version:([\d\w\-]+)', result)

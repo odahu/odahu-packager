@@ -21,9 +21,6 @@ data:
           - name: docker-pull
             connectionTypes: ["docker", "ecr"]
             required: false
-          - name: archive-storage
-            connectionTypes: ["s3", "gcs", "azureblob"]
-            required: false
         arguments:
           properties:
             - name: dockerfileAddCondaInstallation
@@ -82,9 +79,6 @@ data:
             required: true
           - name: docker-pull
             connectionTypes: ["docker", "ecr"]
-            required: false
-          - name: archive-storage
-            connectionTypes: ["s3", "gcs", "azureblob"]
             required: false
         arguments:
           properties:

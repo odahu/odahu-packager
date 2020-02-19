@@ -35,7 +35,6 @@ HANDLER_APP = 'app'
 
 TARGET_DOCKER_REGISTRY = 'docker-push'
 PULL_DOCKER_REGISTRY = 'docker-pull'
-TARGET_ARCHIVE_STORAGE = 'archive-storage'
 
 DOCKER_IMAGE_RESULT = 'image'
 RESULT_FILE_NAME = 'result.json'
