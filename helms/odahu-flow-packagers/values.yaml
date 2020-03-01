@@ -8,7 +8,7 @@ imagesRegistry: odahu/
 # Type: string
 apiUrl: http://odahu-flow-api.odahu-flow.svc.cluster.local
 
-# Version of Toolchain
+# Version of Packagers
 # By default .Chart.AppVersion version is used
 # Type: string
 # packagerVersion: "1.0"
@@ -19,7 +19,16 @@ odahuflowctl:
   # Type: string
   # image: custom-image:1.0
 
+# Default ODAHU Connection for models docker registry
+# Type: string
+default_docker_connection: ""
+
 packagers:
+  base:
+    # This variable can be uncommented to setup custom image name for base docker packager
+    # Type: string
+    # image: custom-image:1.0
+
   rest:
     # REST packager could be disabled
     # Type: bool

@@ -28,6 +28,8 @@ COPY containers/docker-packager/registries.conf \
      containers/docker-packager/storage.conf \
      /etc/containers/
 
-COPY packagers/docker "${WORK_DIR}/packagers/docker"
+COPY packagers/docker/requirements.txt "${WORK_DIR}/packagers/docker/requirements.txt"
+RUN pip3 install -r "${WORK_DIR}/packagers/docker/requirements.txt"
 
+COPY packagers/docker "${WORK_DIR}/packagers/docker"
 RUN pip3 install -e packagers/docker

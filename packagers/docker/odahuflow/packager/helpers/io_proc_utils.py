@@ -81,28 +81,3 @@ def run(*args: str, cwd=None, stream_output: bool = True, sensitive: bool = True
             raise Exception("Non-zero exit code: %s\n\nSTDOUT:\n%s\n\nSTDERR:%s" %
                             (exit_code, stdout, stderr))
         return exit_code, stdout, stderr
-
-
-def remove_directory(path):
-    """
-    Remove directory and all subdirectories or file
-
-    :param path: path to directory or file
-    :type path: str
-    :return: None
-    """
-    try:
-        if os.path.isdir(path):
-            for root, dirs, files in os.walk(path, topdown=False):
-                for name in files:
-                    os.remove(os.path.join(root, name))
-                for name in dirs:
-                    os.rmdir(os.path.join(root, name))
-
-            os.rmdir(path)
-        elif os.path.isfile(path):
-            os.remove(path)
-        else:
-            raise Exception('Not a directory or file: %s' % path)
-    finally:
-        pass

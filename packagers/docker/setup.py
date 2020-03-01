@@ -37,6 +37,10 @@ def extract_version() -> str:
         else:
             raise RuntimeError("Unable to find version string in %s." % (file_content,))
 
+
+with open('requirements.txt') as f:
+    requirements = f.read().splitlines()
+
 setup(
     name='odahu-flow-docker-packager',
     version=extract_version(),
@@ -52,18 +56,7 @@ setup(
             'odahu-flow-pack-to-cli=odahuflow.packager.cli:work_resource_file'
         ],
     },
-    install_requires=[
-        # TODO: change to PyPi when we publish release
-        'odahu-flow-sdk==1.0.0rc35',
-        'click>=7.0',
-        'urllib3>=1.24.3',
-        'pyyaml>=3.1.2',
-        'pydantic>=1.2',
-        'docker',
-        'botocore>=1.12.75',
-        'boto3>=1.9.75',
-        'jinja2>=2.7.3'
-    ],
+    install_requires=requirements,
     extras_require={
         'testing': [
             'pytest>=5.1.2',

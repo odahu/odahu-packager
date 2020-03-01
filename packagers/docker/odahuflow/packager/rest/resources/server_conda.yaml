@@ -1,0 +1,6 @@
+channels:
+  - defaults
+dependencies:
+  - pip:
+      - gunicorn[gevent]==20.0.4
+      - flask==1.1.1

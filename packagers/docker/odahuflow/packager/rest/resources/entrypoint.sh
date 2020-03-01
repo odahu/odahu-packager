@@ -2,10 +2,9 @@
 
 # Starting of Gunicorn server with Odahu's HTTP handler
 
-PATH={{ path }}:$PATH \
 MODEL_LOCATION={{ model_location }} \
-    {{ gunicorn_bin }} \
-    --pythonpath {{ pythonpath }}/ \
+    gunicorn \
+    --pythonpath /app/ \
     --timeout {{ timeout }} \
     -b {{ host }}:{{ port }} \
     -w {{ workers }} \

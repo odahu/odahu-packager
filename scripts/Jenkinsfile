@@ -110,6 +110,13 @@ pipeline {
                         }
                     }
                 }
+                stage("Build docker packager base Docker image") {
+                    steps {
+                        script {
+                            cicdLibrary.buildDockerImage('odahu-flow-docker-packager-base', '.', 'containers/docker-packager-base/Dockerfile')
+                        }
+                    }
+                }
             }
         }
 
@@ -126,6 +133,13 @@ pipeline {
                     steps {
                         script {
                             cicdLibrary.uploadDockerImage('odahu-flow-packagers', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
+                        }
+                    }
+                }
+                stage("Upload docker packager base Docker image") {
+                    steps {
+                        script {
+                            cicdLibrary.uploadDockerImage('odahu-flow-docker-packager-base', env.param_stable_release.toBoolean() && env.param_dockerhub_publishing_enabled.toBoolean())
                         }
                     }
                 }

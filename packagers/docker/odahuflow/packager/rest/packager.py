@@ -19,10 +19,10 @@ import tempfile
 import click
 from odahuflow.packager.helpers.constants import TARGET_DOCKER_REGISTRY, DOCKERFILE_TEMPLATE, \
     PULL_DOCKER_REGISTRY
-from odahuflow.packager.helpers.docker_builder import build_docker_image
-from odahuflow.packager.helpers.io_proc_utils import setup_logging, remove_directory
+from odahuflow.packager.helpers.docker_builder import build_docker_image, push_docker_image
+from odahuflow.packager.helpers.io_proc_utils import setup_logging
 from odahuflow.packager.helpers.manifest_and_resource import parse_resource_file, extract_connection_from_resource, \
-    save_result
+    save_result, merge_packaging_parameters
 from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
 from odahuflow.packager.rest.data_models import PackagingResourceArguments
 from odahuflow.packager.rest.pipeline import work
@@ -37,40 +37,30 @@ from odahuflow.packager.rest.pipeline import work
 def work_resource_file(model, resource_file, verbose):
     setup_logging(verbose)
     resource_info = parse_resource_file(resource_file)
-    model_packaging_spec = resource_info.model_packaging.spec
-    if not model_packaging_spec.arguments:
-        model_packaging_spec.arguments = {}
 
-    arguments = PackagingResourceArguments(**model_packaging_spec.arguments)
+    arguments = PackagingResourceArguments(**merge_packaging_parameters(resource_info))
     output_folder = tempfile.mkdtemp()
     logging.info('Using %r as temporary directory', output_folder)
 
-    manifest = work(model,
-                    output_folder,
-                    conda_env='create',
-                    ignore_conda=True,
-                    conda_env_name='',
-                    dockerfile=True,
-                    arguments=arguments)
+    manifest = work(model, output_folder, arguments=arguments)
 
     # Check if docker target is set
     docker_pull_connection = extract_connection_from_resource(resource_info, PULL_DOCKER_REGISTRY)
     docker_target_connection = extract_connection_from_resource(resource_info, TARGET_DOCKER_REGISTRY)
 
-    image_name = build_image_name(arguments.imageName,
-                                  TemplateNameValues(Name=manifest.model.name, Version=manifest.model.version))
-    if docker_target_connection:
-        # Start docker build & push mechanism
-        build_docker_image(output_folder,
-                           DOCKERFILE_TEMPLATE,
-                           image_name,
-                           docker_target_connection,
-                           docker_pull_connection)
+    image_name = build_image_name(
+        arguments.imageName,
+        TemplateNameValues(Name=manifest.model.name, Version=manifest.model.version)
+    )
 
-    logging.info('Removing temporary directory %r', output_folder)
-    remove_directory(output_folder)
+    build_docker_image(
+        output_folder,
+        DOCKERFILE_TEMPLATE,
+        image_name,
+        docker_pull_connection
+    )
 
-    save_result(f'{docker_target_connection.spec.uri}/{image_name}')
+    save_result(push_docker_image(image_name, docker_target_connection))
 
 
 if __name__ == '__main__':
