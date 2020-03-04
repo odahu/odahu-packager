@@ -17,20 +17,14 @@ data:
         targets:
           - name: docker-push
             connectionTypes: ["docker", "ecr"]
+            default: "{{ .Values.default_docker_connection }}"
             required: true
           - name: docker-pull
             connectionTypes: ["docker", "ecr"]
+            default: "{{ .Values.default_docker_connection }}"
             required: false
         arguments:
           properties:
-            - name: dockerfileAddCondaInstallation
-              parameters:
-                - name: description
-                  value: Add conda installation code to Dockerfile
-                - name: type
-                  value: boolean
-                - name: default
-                  value: true
             - name: dockerfileBaseImage
               parameters:
                 - name: description
@@ -38,15 +32,7 @@ data:
                 - name: type
                   value: string
                 - name: default
-                  value: 'python:3.6'
-            - name: dockerfileCondaEnvsLocation
-              parameters:
-                - name: description
-                  value: Conda env location in Dockerfile.
-                - name: type
-                  value: string
-                - name: default
-                  value: /opt/conda/envs/
+                  value: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.packagers.base "tpl" "%sodahu-flow-docker-packager-base:%s") }}"
             - name: imageName
               parameters:
                 - name: description
@@ -76,20 +62,14 @@ data:
         targets:
           - name: docker-push
             connectionTypes: ["docker", "ecr"]
+            default: "{{ .Values.default_docker_connection }}"
             required: true
           - name: docker-pull
             connectionTypes: ["docker", "ecr"]
+            default: "{{ .Values.default_docker_connection }}"
             required: false
         arguments:
           properties:
-            - name: dockerfileAddCondaInstallation
-              parameters:
-                - name: description
-                  value: Add conda installation code to Dockerfile
-                - name: type
-                  value: boolean
-                - name: default
-                  value: true
             - name: dockerfileBaseImage
               parameters:
                 - name: description
@@ -97,15 +77,7 @@ data:
                 - name: type
                   value: string
                 - name: default
-                  value: 'python:3.6'
-            - name: dockerfileCondaEnvsLocation
-              parameters:
-                - name: description
-                  value: Conda env location in Dockerfile.
-                - name: type
-                  value: string
-                - name: default
-                  value: /opt/conda/envs/
+                  value: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.packagers.base "tpl" "%sodahu-flow-docker-packager-base:%s") }}"
             - name: host
               parameters:
                 - name: description
@@ -161,7 +133,7 @@ data:
                 - name: type
                   value: string
                 - name: default
-                  value: ""
+                  value: "{{`{{ Name }}-{{ Version }}:{{ RandomUUID }}`}}"
     {{- end }}
 ---
 {{- if or (eq .Values.packagers.rest.enabled true) (eq .Values.packagers.cli.enabled true)}}

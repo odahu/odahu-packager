@@ -1,27 +1,18 @@
 # Base image name
 FROM {{ base_image }}
 
-{{ conda_installation_content }}
-
-WORKDIR /app
-
 # Copying of dependencies
-COPY {{ conda_file_name }} \
-     .
+COPY {{ conda_file_name }} .
 
 # Creation of conda's envinroment named model
-RUN conda create -vv --name {{ conda_env_name }} --yes && \
-    conda env update --name={{ conda_env_name }} --file={{ conda_file_name }}
+RUN conda env update --name=${ODAHU_CONDA_ENV_NAME} --file={{ conda_file_name }}
 
-# Updating PATH for entrypoint
-ENV PATH /opt/conda/envs/{{ conda_env_name }}/bin:$PATH
+# Installing of additional packages inside specified env
+COPY {{ conda_server_file_name }} .
+RUN conda env update --name=${ODAHU_CONDA_ENV_NAME} --file={{ conda_server_file_name }}
 
 ENV ODAHU_MODEL_NAME {{ model_name }}
 ENV ODAHU_MODEL_VERSION {{ model_version }}
-
-# Installing of additional software inside specified env
-RUN /opt/conda/envs/{{ conda_env_name }}/bin/pip install gunicorn[gevent]
-
 
 # Copy wrappers
 COPY {{ entrypoint_target }} \

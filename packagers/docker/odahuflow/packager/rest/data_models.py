@@ -8,9 +8,7 @@ class PackagingResourceArguments(pydantic.BaseModel):
     """
 
     dockerfilePush: bool = True
-    dockerfileAddCondaInstallation: bool = True
     dockerfileBaseImage: str = 'python:3.6'
-    dockerfileCondaEnvsLocation: str = '/opt/conda/envs/'
     host: str = '0.0.0.0'
     port: int = 5000
     timeout: int = 60
@@ -29,11 +27,6 @@ class DockerTemplateContext(pydantic.BaseModel):
     model_version: str
     odahuflow_version: str
     packager_version: str
-    path: str
-    path_docker: str
-    conda_env_name: str
-    gunicorn_bin: str
-    gunicorn_bin_docker: str
     timeout: str
     host: str
     port: str
@@ -45,6 +38,6 @@ class DockerTemplateContext(pydantic.BaseModel):
     entrypoint_target: str
     handler_file: str
     base_image: str
-    conda_installation_content: str
     conda_file_name: str
+    conda_server_file_name: str
     entrypoint_docker: str

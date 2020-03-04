@@ -21,7 +21,7 @@ import pydantic
 import yaml
 from odahuflow.packager.helpers.constants import PROJECT_FILE, RESULT_FILE_NAME, DOCKER_IMAGE_RESULT
 from odahuflow.packager.helpers.data_models import OdahuProjectManifest
-from odahuflow.sdk.models import K8sPackager, Connection
+from odahuflow.sdk.models import K8sPackager, Connection, PackagingIntegration
 
 
 def get_model_manifest(model: str) -> OdahuProjectManifest:
@@ -119,3 +119,23 @@ def validate_model_manifest(manifest: OdahuProjectManifest) -> None:
 def save_result(remote_image_name: str):
     with open(RESULT_FILE_NAME, 'w') as fp:
         json.dump({DOCKER_IMAGE_RESULT: remote_image_name}, fp)
+
+
+def extract_default_arguments(packager: PackagingIntegration) -> typing.Dict[str, typing.Any]:
+    arguments: typing.Dict[str, typing.Any] = {}
+    for prop in packager.spec.schema.arguments.properties:
+        # Return the first value of a parameter with 'default' name.
+        arguments[prop.name] = next((x.value for x in prop.parameters if x.name == 'default'), None)
+
+    return arguments
+
+
+def merge_packaging_parameters(packager: K8sPackager):
+    model_packaging_spec = packager.model_packaging.spec
+    if not model_packaging_spec.arguments:
+        model_packaging_spec.arguments = {}
+
+    return {
+        **extract_default_arguments(packager.packaging_integration),
+        **model_packaging_spec.arguments
+    }

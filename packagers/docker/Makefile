@@ -9,6 +9,10 @@ PIP_EXTRA_INDEX_URL=
 docker-build-docker-packager:
 	docker build --build-arg PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} -t odahu/odahu-flow-packagers:${BUILD_TAG} -f containers/docker-packager/Dockerfile .
 
+## docker-build-docker-packager-base: Build docker packager base docker image
+docker-build-docker-packager-base:
+	docker build -t odahu/odahu-flow-docker-packager-base:${BUILD_TAG} -f containers/docker-packager-base/Dockerfile .
+
 ## install-docker-packer: Installs docker packer dependencies
 install-docker-packer:
 	cd packagers/docker && \
@@ -24,7 +28,7 @@ lint-docker-packer:
 	pylint packagers/docker/tests
 
 ## test-docker-packer: Start unit tests of docker packer
-test-docker-packer:
+test-docker-packer: docker-build-docker-packager-base
 	cd packagers/docker && pytest tests
 
 ## helm-delete-docker-packager: Delete docker packager helm release

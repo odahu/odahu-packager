@@ -18,13 +18,12 @@ import os.path
 import shutil
 import uuid
 
-from odahuflow.sdk.gppi import entrypoint_invoke
 from odahuflow.packager.cli.constants import PACKAGE_NAME, ENTRYPOINT_INVOKER_SCRIPT, ENTRYPOINT_INVOKER_CLI_NAME
 from odahuflow.packager.cli.data_models import DockerTemplateContext, PackagingResourceArguments
 from odahuflow.packager.cli.template import render_packager_template
-from odahuflow.packager.helpers.constants import DOCKERFILE_TEMPLATE, ODAHU_SUB_PATH_NAME, GPPI_LOCATION, \
-    DOCKERFILE_CONDA_INST_INSTRUCTIONS_TEMPLATE
+from odahuflow.packager.helpers.constants import DOCKERFILE_TEMPLATE, ODAHU_SUB_PATH_NAME, GPPI_LOCATION
 from odahuflow.packager.helpers.manifest_and_resource import validate_model_manifest, get_model_manifest
+from odahuflow.sdk.gppi import entrypoint_invoke
 
 
 def work(model, output_folder, arguments: PackagingResourceArguments):
@@ -36,7 +35,6 @@ def work(model, output_folder, arguments: PackagingResourceArguments):
     :param output_folder: Path to save results to
     :param conda_env:
     :param ignore_conda:
-    :param conda_env_name:
     :param dockerfile:
     :return: model manifest
     """
@@ -52,12 +50,10 @@ def work(model, output_folder, arguments: PackagingResourceArguments):
     context = DockerTemplateContext(
         gppi_location=GPPI_LOCATION,
         model_location=ODAHU_SUB_PATH_NAME,
-        conda_env_name=str(uuid.uuid4()),
         conda_file_name=manifest.binaries.conda_path,
         model_name=manifest.model.name,
         model_version=manifest.model.version,
         base_image=arguments.dockerfileBaseImage,
-        conda_installation_content=render_packager_template(DOCKERFILE_CONDA_INST_INSTRUCTIONS_TEMPLATE),
         entrypoint_invoker_script=ENTRYPOINT_INVOKER_SCRIPT,
         entrypoint_invoker_cli_name=ENTRYPOINT_INVOKER_CLI_NAME,
         entrypoint=manifest.model.entrypoint,

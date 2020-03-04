@@ -13,21 +13,72 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
+# pylint: disable=redefined-outer-name
 import json
 import logging
 import os
+import tempfile
 from typing import List
 from unittest import mock
 
 import docker
+import pytest
 from docker.models.images import ImageCollection
 from odahuflow.packager.cli import work_resource_file
 from odahuflow.packager.helpers.io_proc_utils import run
+from odahuflow.sdk.models import K8sPackager, ModelPackaging, ModelPackagingSpec, PackagingIntegration, \
+    PackagingIntegrationSpec, Schema, JsonSchema, PackagerTarget, Connection, ConnectionSpec
 
-RESOURCES_DIR = f'{os.path.join(os.getcwd(), "tests/resources")}'
+RESOURCES_DIR = f'{os.path.join(os.path.dirname(os.path.realpath(__file__)), "resources")}'
 LEN_REMOVED_IMAGES_REPR = 'two images must be deleted from local machine: local and for external registry'
 
 patch_obj = mock.patch.object
+
+
+@pytest.fixture()
+def packager_manifest_file() -> str:
+    """
+    Returns path to a temporary Packager file
+    """
+    with tempfile.NamedTemporaryFile(mode="w") as temp_file:
+        temp_file.write(json.dumps(
+            K8sPackager(
+                model_packaging=ModelPackaging(
+                    id="wine",
+                    spec=ModelPackagingSpec(
+                        integration_name="docker-cli",
+                        targets=[],
+                    ),
+                ),
+                packaging_integration=PackagingIntegration(
+                    id="docker-cli",
+                    spec=PackagingIntegrationSpec(
+                        schema=Schema(
+                            arguments=JsonSchema(
+                                properties=[],
+                            )
+                        )
+                    )
+                ),
+                targets=[
+                    PackagerTarget(
+                        name="docker-push",
+                        connection=Connection(
+                            id="docker-ci",
+                            spec=ConnectionSpec(
+                                type="docker",
+                                uri="gcr.io/some-url",
+                                username="username",
+                                password="password",
+                            ),
+                        ),
+                    ),
+                ],
+            ).to_dict()
+        ))
+        temp_file.flush()
+
+        yield temp_file.name
 
 
 class MockImageRemover:
@@ -48,19 +99,17 @@ def mock_push(*args, **kwargs):
     yield 'Image is not pushed because of mocking'
 
 
-def test_cli(tmp_path):
-
+def test_cli(tmp_path, packager_manifest_file: str):
     logging.basicConfig(level=logging.DEBUG)
 
     model_path = os.path.join(RESOURCES_DIR, 'simple-model')
-    resource_file = os.path.join(RESOURCES_DIR, 'resource.json')
 
     image_remover = MockImageRemover()
 
     try:
         with patch_obj(ImageCollection, 'remove', image_remover), patch_obj(ImageCollection, 'push', mock_push):
             # pylint: disable=unexpected-keyword-arg,no-value-for-parameter
-            work_resource_file([model_path, resource_file, '--verbose'], standalone_mode=False)
+            work_resource_file([model_path, packager_manifest_file, '--verbose'], standalone_mode=False)
 
         assert len(image_remover.images_for_removing) == 2, LEN_REMOVED_IMAGES_REPR
 

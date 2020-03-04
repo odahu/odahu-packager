@@ -1,19 +1,14 @@
 # Base image name
 FROM {{ base_image }}
 
-{{ conda_installation_content }}
-
-WORKDIR /app
-
 # Copy model GPPI
 COPY {{ gppi_location }} /app/{{ gppi_location }}
 
-# Install deps from GPPI to specific conda env
-RUN conda create -vv --name {{ conda_env_name }} --yes && \
-    conda env update --name={{ conda_env_name }} --file={{ gppi_location }}/{{ conda_file_name }}
+# Creation of conda's envinroment named model
+RUN conda env update --name=${ODAHU_CONDA_ENV_NAME} --file={{ gppi_location }}/{{ conda_file_name }}
 
-# Updating PATH for entrypoint
-ENV PATH /opt/conda/envs/{{ conda_env_name }}/bin:$PATH
+# Copy model GPPI
+COPY {{ gppi_location }} /app/{{ gppi_location }}
 
 COPY {{ package_name }} /app/{{ package_name }}
 COPY setup.py /app/

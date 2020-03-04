@@ -48,19 +48,13 @@ def extract_docker_login_credentials(
     return connection.spec.uri, connection.spec.username, connection.spec.password
 
 
-def test_is_buildah_available():
+def test_is_docker_available() -> None:
     """
-    Check is buildah is available
+    Check is docker socket available
 
-    :return: bool -- is buildah available
+    :return: is buildah available
     """
-    try:
-        run(BUILDAH_BIN, '--version')
-        logging.info('buildah is detected')
-        return True
-    except Exception:
-        logging.info('buildah is not detected')
-        return False
+    return os.path.exists("/var/run/docker.sock")
 
 
 def _extract_buildah_credentials(connection: typing.Optional[Connection] = None,
@@ -88,21 +82,17 @@ def _extract_buildah_credentials(connection: typing.Optional[Connection] = None,
 def build_docker_image_buildah(context,
                                docker_file,
                                external_docker_name,
-                               push_connection: Connection,
                                pull_connection: typing.Optional[Connection] = None):
     """
-    Build and push docker image
+    Build the docker image using buildah
 
     :param context: docker build context
     :param docker_file: Dockerfile name (relative to docker build context)
     :param external_docker_name: external docker image target name, without host
-    :param push_connection: connection for pushing Docker images to
-    :param pull_connection: (Optional) connection for pulling Docker image during build from
-    :return: None
+    :param pull_connection: connection for pulling Docker image during build from
     """
-    remote_tag = f'{push_connection.spec.uri}/{external_docker_name}'
-
     logging.info('Starting building of new image')
+
     build_args = [
         BUILDAH_BIN, 'build-using-dockerfile',
         *_extract_buildah_credentials(pull_connection),
@@ -110,10 +100,31 @@ def build_docker_image_buildah(context,
         '--file', docker_file,
         '--format', 'docker',
         '--compress',
-        '--tag', remote_tag,
+        '--tag', external_docker_name,
         context
     ]
     run(*build_args)
+
+
+def push_docker_image_buildah(external_docker_name, push_connection: typing.Optional[Connection]) -> str:
+    """
+    Push the docker image using buildah
+
+    :param external_docker_name: external docker image target name, without host
+    :param push_connection: connection for pushing Docker images to
+    """
+    if not push_connection:
+        return external_docker_name
+
+    remote_tag = f'{push_connection.spec.uri}/{external_docker_name}'
+
+    logging.info('Starting pushing of image')
+    tag_args = [
+        BUILDAH_BIN, 'tag',
+        external_docker_name,
+        remote_tag
+    ]
+    run(*tag_args)
 
     logging.info('Starting pushing of image')
     push_args = [
@@ -122,6 +133,8 @@ def build_docker_image_buildah(context,
         remote_tag
     ]
     run(*push_args, sensitive=True)
+
+    return remote_tag
 
 
 def _authorize_docker(client: docker.DockerClient, connection: Connection):
@@ -147,17 +160,14 @@ def _authorize_docker(client: docker.DockerClient, connection: Connection):
 def build_docker_image_docker(context,
                               docker_file,
                               external_docker_name,
-                              push_connection: Connection,
                               pull_connection: typing.Optional[Connection] = None):
     """
-    Build and push docker image
+    Build the docker image using docker
 
     :param context: docker build context
     :param docker_file: Dockerfile name (relative to docker build context)
     :param external_docker_name: external docker image target name, without host
-    :param push_connection: connection for pushing Docker images to
     :param pull_connection: (Optional) connection for pulling Docker image during build from
-    :return:
     """
     logging.debug('Building docker client from ENV variables')
     client = docker.from_env()
@@ -178,7 +188,8 @@ def build_docker_image_docker(context,
 
         try:
             chunk_json = json.loads(chunk)
-
+            if 'error' in chunk_json:
+                raise Exception(chunk_json['error'])
             if 'stream' in chunk_json:
                 for line in chunk_json['stream'].splitlines():
                     LOGGER.info(line.strip())
@@ -186,48 +197,75 @@ def build_docker_image_docker(context,
         except json.JSONDecodeError:
             LOGGER.info(chunk)
 
-    # Tag for pushing
+
+def push_docker_image_docker(external_docker_name, push_connection: typing.Optional[Connection]) -> str:
+    """
+    Push the docker image using docker
+
+    :param external_docker_name: external docker image target name, without host
+    :param push_connection: connection for pushing Docker images to
+    """
+    logging.debug('Building docker client from ENV variables')
+    client = docker.from_env()
+
+    if not push_connection:
+        # Tag local image
+        local_built = client.images.get(external_docker_name)
+        local_built.tag(external_docker_name)
+
+        return external_docker_name
+
     remote_tag = f'{push_connection.spec.uri}/{external_docker_name}'
     local_built = client.images.get(external_docker_name)
     local_built.tag(remote_tag)
 
-    # Push
-    log_generator = client.images.push(repository=remote_tag,
-                                       stream=True,
-                                       auth_config={
-                                           'username': push_connection.spec.username,
-                                           'password': push_connection.spec.password
-                                       })
+    log_generator = client.images.push(
+        repository=remote_tag,
+        stream=True,
+        auth_config={
+            'username': push_connection.spec.username,
+            'password': push_connection.spec.password
+        }
+    )
 
     for line in log_generator:
         if isinstance(line, bytes):
             line = line.decode('utf-8')
+
         LOGGER.info(line)
 
     client.images.remove(remote_tag)
     client.images.remove(external_docker_name)
 
+    return remote_tag
+
 
 def build_docker_image(context,
                        docker_file,
                        external_docker_name,
-                       push_connection: Connection,
                        pull_connection: typing.Optional[Connection] = None):
     """
     Build and push docker image
 
     :param context: docker build context (folder name)
-    :type context: str
     :param docker_file: Dockerfile name (relative to docker build context)
-    :type docker_file: str
     :param external_docker_name: external docker image target name, without host
-    :type external_docker_name: str
-    :param push_connection: connection for pushing Docker images to
     :param pull_connection: (Optional) connection for pulling Docker image during build from
-    :type pull_connection: typing.Optional[PackagingResourceConnection]
-    :return: None
     """
-    if test_is_buildah_available():
-        build_docker_image_buildah(context, docker_file, external_docker_name, push_connection, pull_connection)
+    if test_is_docker_available():
+        build_docker_image_docker(context, docker_file, external_docker_name, pull_connection)
     else:
-        build_docker_image_docker(context, docker_file, external_docker_name, push_connection, pull_connection)
+        build_docker_image_buildah(context, docker_file, external_docker_name, pull_connection)
+
+
+def push_docker_image(external_docker_name: str, push_connection: Connection) -> str:
+    """
+    Push docker image
+
+    :param external_docker_name: external docker image target name, without host
+    :param push_connection: connection for pushing Docker images to
+    """
+    if test_is_docker_available():
+        return push_docker_image_docker(external_docker_name, push_connection)
+    else:
+        return push_docker_image_buildah(external_docker_name, push_connection)
