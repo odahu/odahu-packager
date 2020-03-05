@@ -19,10 +19,6 @@ odahuflowctl:
   # Type: string
   # image: custom-image:1.0
 
-# Default ODAHU Connection for models docker registry
-# Type: string
-default_docker_connection: ""
-
 packagers:
   base:
     # This variable can be uncommented to setup custom image name for base docker packager
@@ -34,6 +30,22 @@ packagers:
     # Type: bool
     enabled: true
 
+    # Targets configuration
+    # Type: dict
+    targets:
+      # Configuration of docker-push target
+      # Type: dict
+      docker_push:
+        # Default connection ID
+        # Type: str
+        default: ""
+      # Configuration of docker-push target
+      # Type: dict
+      docker_pull:
+        # Default connection ID
+        # Type: str
+        default: ""
+
     # This variable can be uncommented to setup custom image name for REST packager
     # Type: string
     # image: custom-image:1.0
@@ -42,6 +54,22 @@ packagers:
     # CLI packager could be disabled
     # Type: bool
     enabled: true
+
+    # Targets configuration
+    # Type: dict
+    targets:
+      # Configuration of docker-push target
+      # Type: dict
+      docker_push:
+        # Default connection ID
+        # Type: str
+        default: ""
+      # Configuration of docker-push target
+      # Type: dict
+      docker_pull:
+        # Default connection ID
+        # Type: str
+        default: ""
 
     # This variable can be uncommented to setup custom image name for REST packager
     # Type: string

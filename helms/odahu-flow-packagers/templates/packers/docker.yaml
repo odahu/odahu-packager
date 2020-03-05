@@ -17,11 +17,11 @@ data:
         targets:
           - name: docker-push
             connectionTypes: ["docker", "ecr"]
-            default: "{{ .Values.default_docker_connection }}"
+            default: "{{ .Values.packagers.cli.targets.docker_push.default }}"
             required: true
           - name: docker-pull
             connectionTypes: ["docker", "ecr"]
-            default: "{{ .Values.default_docker_connection }}"
+            default: "{{ .Values.packagers.cli.targets.docker_pull.default }}"
             required: false
         arguments:
           properties:
@@ -62,11 +62,11 @@ data:
         targets:
           - name: docker-push
             connectionTypes: ["docker", "ecr"]
-            default: "{{ .Values.default_docker_connection }}"
+            default: "{{ .Values.packagers.rest.targets.docker_push.default }}"
             required: true
           - name: docker-pull
             connectionTypes: ["docker", "ecr"]
-            default: "{{ .Values.default_docker_connection }}"
+            default: "{{ .Values.packagers.rest.targets.docker_pull.default }}"
             required: false
         arguments:
           properties:
