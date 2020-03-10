@@ -21,7 +21,7 @@ ENV WORK_DIR="/opt/odahu-flow"
 WORKDIR "${WORK_DIR}/"
 
 RUN dnf -y update && dnf -y reinstall shadow-utils && \
-    dnf -y install buildah runc fuse-overlayfs python3-pip --exclude container-selinux && \
+    dnf -y install buildah runc python3-pip --exclude container-selinux && \
     rm -rf /var/cache /var/log/dnf* /var/log/yum.*
 
 COPY containers/docker-packager/registries.conf \
