@@ -48,7 +48,7 @@ data:
                 - name: type
                   value: string
                 - name: default
-                  value: ""
+                  value: "{{`{{ Name }}-{{ Version }}:{{ RandomUUID }}`}}"
     {{- end -}}
     {{- if .Values.packagers.rest.enabled }}
     ---
