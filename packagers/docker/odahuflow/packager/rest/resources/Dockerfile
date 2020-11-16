@@ -37,4 +37,4 @@ ENV PYTHONUNBUFFERED 1
 
 # Setting cmd
 ENTRYPOINT ["gunicorn"]
-CMD ["--pythonpath", "/app/", "--timeout", "{{ timeout }}", "-b", "{{ host }}:{{ port }}", "-w", "{{ workers }}", "--threads", "{{ threads }}", "{{ wsgi_handler }}"]
+CMD ["--pythonpath", "/app/", "--timeout", "{{ timeout }}", "-b", "{{ host }}:{{ port }}", "-w", "{{ workers }}", "--threads", "{{ threads }}", "{{ wsgi_handler }}", "--access-logfile", "-"]
