@@ -31,6 +31,10 @@ RUN chmod +x {{ entrypoint_docker }}
 
 ENV MODEL_LOCATION {{ model_location }}
 
+# Immediately show flask logs in docker logs
+# https://stackoverflow.com/questions/27687867/is-there-a-way-to-log-python-print-statements-in-gunicorn
+ENV PYTHONUNBUFFERED 1
+
 # Setting cmd
 ENTRYPOINT ["gunicorn"]
 CMD ["--pythonpath", "/app/", "--timeout", "{{ timeout }}", "-b", "{{ host }}:{{ port }}", "-w", "{{ workers }}", "--threads", "{{ threads }}", "{{ wsgi_handler }}"]
