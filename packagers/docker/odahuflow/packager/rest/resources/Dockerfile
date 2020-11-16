@@ -29,6 +29,8 @@ EXPOSE {{ port }}
 # Change permissions to cmd
 RUN chmod +x {{ entrypoint_docker }}
 
+ENV MODEL_LOCATION {{ model_location }}
+
 # Setting cmd
-ENTRYPOINT ["bash", "-c"]
-CMD ["/app/{{ entrypoint_docker }}"]
+ENTRYPOINT ["gunicorn"]
+CMD ["--pythonpath", "/app/", "--timeout", "{{ timeout }}", "-b", "{{ host }}:{{ port }}", "-w", "{{ workers }}", "--threads", "{{ threads }}", "{{ wsgi_handler }}"]
