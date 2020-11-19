@@ -9,9 +9,19 @@ PIP_EXTRA_INDEX_URL=
 docker-build-docker-packager:
 	docker build --build-arg PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL} -t odahu/odahu-flow-packagers:${BUILD_TAG} -f containers/docker-packager/Dockerfile .
 
+## docker-push-docker-packager-base: Push docker image
+docker-push-docker-packager:
+	docker tag odahu/odahu-flow-packagers:${BUILD_TAG} ${DOCKER_REGISTRY}/odahu/odahu-flow-packagers:${TAG}
+	docker push ${DOCKER_REGISTRY}/odahu/odahu-flow-packagers:${TAG}
+
 ## docker-build-docker-packager-base: Build docker packager base docker image
 docker-build-docker-packager-base:
 	docker build -t odahu/odahu-flow-docker-packager-base:${BUILD_TAG} -f containers/docker-packager-base/Dockerfile .
+
+## docker-push-docker-packager-base: Push docker image
+docker-push-docker-packager-base:
+	docker tag odahu/odahu-flow-docker-packager-base:${BUILD_TAG} ${DOCKER_REGISTRY}/odahu/odahu-flow-packager-base:${TAG}
+	docker push ${DOCKER_REGISTRY}/odahu/odahu-flow-packager-base:${TAG}
 
 ## install-docker-packer: Installs docker packer dependencies
 install-docker-packer:
