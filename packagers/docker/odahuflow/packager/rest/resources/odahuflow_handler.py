@@ -217,10 +217,23 @@ def handle_prediction_on_objects(parsed_data):
     return build_error_response('Can not handle this types of requests')
 
 
+def handle_prediction_on_raw(raw_data: bytes) -> bytes:
+
+    try:
+        raw_response = odahuflow_model.entrypoint.predict_on_raw(raw_data)
+    except Exception as predict_exception:
+        return build_error_response(f'Exception during prediction: {predict_exception}')
+    return raw_response
+
+
 @app.route('/api/model/invoke', methods=['POST'])
 def predict():
     if not request.data:
         return build_error_response('Please provide data with this POST request')
+
+    if SUPPORTED_PREDICTION_MODE == 'raw':
+        response_raw = handle_prediction_on_raw(request.data)
+        return response_raw
 
     try:
         data = request.data.decode('utf-8')
