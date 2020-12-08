@@ -14,14 +14,12 @@
 #    limitations under the License.
 #
 import json
-import os
-from typing import List, Dict, Union, Any, Tuple
-
-import odahuflow_model.entrypoint
-from flask import Flask, jsonify, Response, request
-import orjson
 import numpy as np
-
+import odahuflow_model.entrypoint
+import orjson
+import os
+from flask import Flask, jsonify, Response, request
+from typing import List, Dict, Union, Any, Tuple
 
 REQUEST_ID = 'x-request-id'
 MODEL_REQUEST_ID = 'request-id'
@@ -205,7 +203,15 @@ def handle_prediction_on_matrix(parsed_data: dict) -> bytes:
         'columns': columns
     }
 
-    response_json = orjson.dumps(response, option=orjson.OPT_SERIALIZE_NUMPY)
+    try:
+        response_json = orjson.dumps(response, option=orjson.OPT_SERIALIZE_NUMPY)
+    except TypeError as e:
+        if not isinstance(response['prediction'], np.ndarray):
+            raise e
+
+        response['prediction'] = response['prediction'].tolist()
+        response_json = orjson.dumps(response)
+
     return response_json
 
 
