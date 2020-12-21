@@ -1,18 +1,5 @@
-#  Copyright 2020 EPAM Systems
 #
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#  http://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
-
-#
+#    Copyright 2019 EPAM Systems
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -34,8 +21,8 @@ import shutil
 from odahuflow.packager.flask.constants import RESOURCES_FOLDER
 from odahuflow.packager.flask.data_models import PackagingResourceArguments, DockerTemplateContext
 from odahuflow.packager.flask.template import render_packager_template
-from odahuflow.packager.helpers.constants import ODAHU_SUB_PATH_NAME, HANDLER_MODULE, CONDA_FILE_NAME, \
-    ENTRYPOINT_TEMPLATE, HANDLER_APP, DOCKERFILE_TEMPLATE, CONDA_SERVER_FILE_NAME
+from odahuflow.packager.helpers.constants import ODAHU_SUB_PATH_NAME, HANDLER_MODULE, \
+    CONDA_FILE_NAME, ENTRYPOINT_TEMPLATE, HANDLER_APP, DOCKERFILE_TEMPLATE, CONDA_SERVER_FILE_NAME
 from odahuflow.packager.helpers.data_models import OdahuProjectManifest
 from odahuflow.packager.helpers.io_proc_utils import make_executable
 from odahuflow.packager.helpers.manifest_and_resource import validate_model_manifest, get_model_manifest
