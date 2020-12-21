@@ -75,6 +75,9 @@ packagers:
     # Type: string
     # image: custom-image:1.0
 
+  triton:
+    default_triton_base_image_tag: "20.11-py3"
+
 
 # Service account used to upload odahu resources via odahuflowctl
 resource_uploader_sa: {}

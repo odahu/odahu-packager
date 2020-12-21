@@ -134,6 +134,53 @@ data:
                   value: string
                 - name: default
                   value: "{{`{{ Name }}-{{ Version }}:{{ RandomUUID }}`}}"
+    ---
+    kind: PackagingIntegration
+    id: docker-triton
+    spec:
+      entrypoint: "/usr/local/bin/odahu-flow-pack-to-triton"
+      defaultImage: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.packagers.rest "tpl" "%sodahu-flow-packagers:%s") }}"
+      privileged: true
+      schema:
+        targets:
+          - name: docker-push
+            connectionTypes: ["docker", "ecr"]
+            default: "{{ .Values.packagers.rest.targets.docker_push.default }}"
+            required: true
+        arguments:
+          properties:
+            - name: triton_base_image_tag
+              parameters:
+                - name: description
+                  value: Triton base image tag for Dockerfile.
+                - name: type
+                  value: string
+                - name: default
+                  value: "{{ .Values.packagers.triton.default_triton_base_image_tag }}"
+            - name: host
+              parameters:
+                - name: description
+                  value: Host to bind.
+                - name: type
+                  value: string
+                - name: default
+                  value: 0.0.0.0
+            - name: imageName
+              parameters:
+                - name: description
+                  value: |
+    {{`This option provides a way to specify the Docker image name. You can hardcode the full name or specify a template. Available template values:
+                      - Name (Model Name)
+                      - Version (Model Version)
+                      - RandomUUID
+                    The default value is '{{ Name }}/{{ Version }}:{{ RandomUUID }}'.
+                    Image name examples:
+                      - myservice:123
+                      - {{ Name }}:{{ Version }}`}}
+                - name: type
+                  value: string
+                - name: default
+                  value: "{{`{{ Name }}-{{ Version }}:{{ RandomUUID }}`}}"
     {{- end }}
 ---
 {{- if or (eq .Values.packagers.rest.enabled true) (eq .Values.packagers.cli.enabled true)}}
