@@ -1,4 +1,6 @@
 SHELL := /bin/bash
+BUILD_TAG=latest
+PIP_EXTRA_INDEX_URL=
 
 -include .env
 
