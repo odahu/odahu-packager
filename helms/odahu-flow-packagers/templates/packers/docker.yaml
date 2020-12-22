@@ -55,7 +55,7 @@ data:
     kind: PackagingIntegration
     id: docker-rest
     spec:
-      entrypoint: "/usr/local/bin/odahu-flow-pack-to-rest"
+      entrypoint: "/usr/local/bin/odahu-flow-pack-to-flask"
       defaultImage: "{{ include "odahuflow.image-name" (dict "root" . "service" .Values.packagers.rest "tpl" "%sodahu-flow-packagers:%s") }}"
       privileged: true
       schema:
