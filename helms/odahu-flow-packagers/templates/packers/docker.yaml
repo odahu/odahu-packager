@@ -134,6 +134,8 @@ data:
                   value: string
                 - name: default
                   value: "{{`{{ Name }}-{{ Version }}:{{ RandomUUID }}`}}"
+    {{- end -}}
+    {{- if .Values.packagers.triton.enabled }}
     ---
     kind: PackagingIntegration
     id: docker-triton
@@ -145,7 +147,7 @@ data:
         targets:
           - name: docker-push
             connectionTypes: ["docker", "ecr"]
-            default: "{{ .Values.packagers.rest.targets.docker_push.default }}"
+            default: "{{ .Values.packagers.triton.targets.docker_push.default }}"
             required: true
         arguments:
           properties:
@@ -157,14 +159,6 @@ data:
                   value: string
                 - name: default
                   value: "{{ .Values.packagers.triton.default_triton_base_image_tag }}"
-            - name: host
-              parameters:
-                - name: description
-                  value: Host to bind.
-                - name: type
-                  value: string
-                - name: default
-                  value: 0.0.0.0
             - name: imageName
               parameters:
                 - name: description
