@@ -163,7 +163,7 @@ data:
               parameters:
                 - name: description
                   value: |
-    {{`This option provides a way to specify the Docker image name. You can hardcode the full name or specify a template. Available template values:
+                    {{`This option provides a way to specify the Docker image name. You can hardcode the full name or specify a template. Available template values:
                       - Name (Model Name)
                       - Version (Model Version)
                       - RandomUUID

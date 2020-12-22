@@ -80,15 +80,15 @@ packagers:
 
     default_triton_base_image_tag: "20.11-py3"
 
-      # Targets configuration
+    # Targets configuration
+    # Type: dict
+    targets:
+      # Configuration of docker-push target
       # Type: dict
-      targets:
-        # Configuration of docker-push target
-        # Type: dict
-        docker_push:
-          # Default connection ID
-          # Type: str
-          default: ""
+      docker_push:
+        # Default connection ID
+        # Type: str
+        default: ""
 
 
 # Service account used to upload odahu resources via odahuflowctl
