@@ -41,7 +41,6 @@ class DockerTemplateContext(pydantic.BaseModel):
     model_name: str
     model_version: str
     odahuflow_version: str
-    packager_version: str
     timeout: str
     host: str
     port: str
