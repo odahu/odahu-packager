@@ -14,13 +14,11 @@
 
 import pydantic
 import re
-from dataclasses import dataclass
 
 from odahuflow.packager.helpers.constants import DEFAULT_IMAGE_NAME_TEMPLATE
 
 
-@dataclass
-class PackagingArguments:
+class PackagingArguments(pydantic.BaseModel):
     triton_base_image_tag: str = '20.11-py3'
     # Full name or Jinja template
     imageName: str = DEFAULT_IMAGE_NAME_TEMPLATE

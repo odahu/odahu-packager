@@ -12,8 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import enum
-
 import click
 import jinja2
 import logging
@@ -21,6 +19,7 @@ import pathlib
 import shutil
 import tempfile
 import yaml
+from odahuflow.sdk.models import K8sPackager
 
 from odahuflow.packager.helpers.constants import TARGET_DOCKER_REGISTRY
 from odahuflow.packager.helpers.docker_builder import build_docker_image, push_docker_image
@@ -30,27 +29,9 @@ from odahuflow.packager.helpers.manifest_and_resource import parse_resource_file
 from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
 from .constants import MODEL_MANIFEST_FILE, TRITON_CONFIG_FILE, CONDA_FILE, DOCKERFILE_TEMPLATE_FILE
 from .models import PackagingArguments, ModelMeta
+from .triton_data import TritonBackends, optional_config_backends
 
 log = logging.getLogger(__name__)
-
-
-class TritonBackends(enum.Enum):
-    """This enum contains all supported Triton Backends
-    and their corresponding expected names of model file
-    """
-    Python = 'model.py'
-    TensorRT = 'model.plan'
-    TensorFlow_SavedModel = 'model.savedmodel'
-    TensorFlow_GraphDef = 'model.graphdef'
-    ONNX = 'model.onnx'
-    TorchScript = 'model.pt'
-    Caffe2 = 'model.netdef'
-
-
-# Set of backends that don't require Triton config file
-# https://docs.nvidia.com/deeplearning/triton-inference-server/master-user-guide/docs/model_configuration.html#generated-model-configuration
-optional_config_backends = {TritonBackends.TensorRT, TritonBackends.TensorFlow_SavedModel, TritonBackends.ONNX}
-
 
 resources_dir = pathlib.Path(__file__).parent / 'resources'
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(resources_dir))
@@ -63,10 +44,12 @@ jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(resources_dir))
 def pack(model_dir, packager_file, verbose):
     setup_logging(verbose)
     model_dir = pathlib.Path(model_dir)
-    resource_info = parse_resource_file(packager_file)
 
+    resource_info: K8sPackager = parse_resource_file(packager_file)
     docker_target_connection = extract_connection_from_resource(resource_info, TARGET_DOCKER_REGISTRY)
+
     arguments = PackagingArguments(**merge_packaging_parameters(resource_info))
+
     model_repo_dir = pathlib.Path(tempfile.mkdtemp())
     log.info(f'Using {model_repo_dir} as temporary model repository')
 
@@ -114,7 +97,7 @@ def pack(model_dir, packager_file, verbose):
     else:
         conda_file_path = None
 
-    # Copying all other arbitrary files into output model directory
+    # Copying all other arbitrary files into output directory
     for file in model_dir.iterdir():
         if file.name in not_to_copy:
             continue
@@ -130,7 +113,7 @@ def pack(model_dir, packager_file, verbose):
         **merge_packaging_parameters(resource_info)
     )
 
-    dockerfile_name = 'Dockefile'
+    dockerfile_name = 'Dockerfile'
     with open(model_repo_dir / dockerfile_name, 'w') as dockerfile:
         dockerfile.write(dockerfile_content)
 
