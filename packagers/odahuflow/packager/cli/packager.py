@@ -13,9 +13,10 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-import click
 import logging
 import tempfile
+
+import click
 from odahuflow.sdk.models import Connection
 
 from odahuflow.packager.cli.data_models import PackagingResourceArguments

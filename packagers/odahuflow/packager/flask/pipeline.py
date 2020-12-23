@@ -13,14 +13,13 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-import os.path
-
 import logging
+import os.path
 import shutil
 
-from odahuflow.packager.flask.constants import RESOURCES_FOLDER
-from odahuflow.packager.flask.data_models import PackagingResourceArguments, DockerTemplateContext
-from odahuflow.packager.flask.template import render_packager_template
+from .constants import RESOURCES_FOLDER
+from .data_models import PackagingResourceArguments, DockerTemplateContext
+from .template import render_packager_template
 from odahuflow.packager.helpers.constants import ODAHU_SUB_PATH_NAME, HANDLER_MODULE, \
     CONDA_FILE_NAME, ENTRYPOINT_TEMPLATE, HANDLER_APP, DOCKERFILE_TEMPLATE, CONDA_SERVER_FILE_NAME
 from odahuflow.packager.helpers.data_models import OdahuProjectManifest

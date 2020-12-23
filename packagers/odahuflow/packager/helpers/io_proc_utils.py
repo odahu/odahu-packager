@@ -13,10 +13,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
+import logging
 import os.path
 import stat
-
-import logging
 import subprocess
 
 LOGGER = logging.getLogger(__name__)

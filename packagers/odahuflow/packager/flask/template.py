@@ -17,10 +17,10 @@
 Template helper
 """
 from os import path
-
-from jinja2 import Environment, FileSystemLoader
 from pathlib import Path
 from typing import Any, Dict, Optional
+
+from jinja2 import Environment, FileSystemLoader
 
 # Looks like Jinja PackageLoader does not work with a namespaced package
 # Because of this we should use FileSystemLoader here

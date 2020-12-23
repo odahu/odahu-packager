@@ -17,15 +17,14 @@ import click
 import logging
 import tempfile
 
-from odahuflow.packager.flask.data_models import PackagingResourceArguments
-from odahuflow.packager.flask.pipeline import work
-from odahuflow.packager.helpers.constants import TARGET_DOCKER_REGISTRY, DOCKERFILE_TEMPLATE, \
-    PULL_DOCKER_REGISTRY
+from odahuflow.packager.helpers.constants import TARGET_DOCKER_REGISTRY, DOCKERFILE_TEMPLATE, PULL_DOCKER_REGISTRY
 from odahuflow.packager.helpers.docker_builder import build_docker_image, push_docker_image
 from odahuflow.packager.helpers.io_proc_utils import setup_logging
 from odahuflow.packager.helpers.manifest_and_resource import parse_resource_file, extract_connection_from_resource, \
     save_result, merge_packaging_parameters
 from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
+from .data_models import PackagingResourceArguments
+from .pipeline import work
 
 
 @click.command()

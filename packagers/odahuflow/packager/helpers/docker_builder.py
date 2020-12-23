@@ -16,15 +16,16 @@
 """
 Docker image builder
 """
-import docker
 import json
 import logging
 import os
 import typing
+
+import docker
 from odahuflow.sdk.models import Connection
 
-from odahuflow.packager.helpers.extensions.ecr import ECR_CONNECTION_TYPE, get_ecr_credentials
-from odahuflow.packager.helpers.io_proc_utils import run
+from .extensions.ecr import ECR_CONNECTION_TYPE, get_ecr_credentials
+from .io_proc_utils import run
 
 BUILDAH_BIN = os.getenv('BUILDAH_BIN', 'buildah')
 LOGGER = logging.getLogger(__name__)

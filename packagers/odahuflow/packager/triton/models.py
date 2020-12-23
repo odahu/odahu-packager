@@ -12,8 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import pydantic
 import re
+import pydantic
 
 from odahuflow.packager.helpers.constants import DEFAULT_IMAGE_NAME_TEMPLATE
 

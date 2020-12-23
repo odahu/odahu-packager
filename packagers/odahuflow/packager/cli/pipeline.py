@@ -13,16 +13,16 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-import os.path
-
 import logging
+import os.path
 import shutil
 import uuid
+
 from odahuflow.sdk.gppi import entrypoint_invoke
 
-from odahuflow.packager.cli.constants import PACKAGE_NAME, ENTRYPOINT_INVOKER_SCRIPT, ENTRYPOINT_INVOKER_CLI_NAME
-from odahuflow.packager.cli.data_models import DockerTemplateContext, PackagingResourceArguments
-from odahuflow.packager.cli.template import render_packager_template
+from .constants import PACKAGE_NAME, ENTRYPOINT_INVOKER_SCRIPT, ENTRYPOINT_INVOKER_CLI_NAME
+from .data_models import DockerTemplateContext, PackagingResourceArguments
+from .template import render_packager_template
 from odahuflow.packager.helpers.constants import DOCKERFILE_TEMPLATE, ODAHU_SUB_PATH_NAME, GPPI_LOCATION
 from odahuflow.packager.helpers.manifest_and_resource import validate_model_manifest, get_model_manifest
 
