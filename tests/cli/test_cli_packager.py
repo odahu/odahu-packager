@@ -15,13 +15,13 @@
 #
 # pylint: disable=redefined-outer-name
 from unittest import mock
-
-import docker
 import json
 import logging
 import os
 import pytest
 import tempfile
+
+import docker
 from docker.models.images import ImageCollection
 from odahuflow.sdk.models import K8sPackager, ModelPackaging, ModelPackagingSpec, PackagingIntegration, \
     PackagingIntegrationSpec, Schema, JsonSchema, PackagerTarget, Connection, ConnectionSpec

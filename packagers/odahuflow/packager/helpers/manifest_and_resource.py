@@ -15,9 +15,9 @@
 #
 import json
 import os.path
-import pydantic
 import typing
 
+import pydantic
 import yaml
 from odahuflow.sdk.models import K8sPackager, Connection, PackagingIntegration
 

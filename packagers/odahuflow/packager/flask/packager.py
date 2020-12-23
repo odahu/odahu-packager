@@ -13,9 +13,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-import click
 import logging
 import tempfile
+import click
 
 from odahuflow.packager.helpers.constants import TARGET_DOCKER_REGISTRY, DOCKERFILE_TEMPLATE, PULL_DOCKER_REGISTRY
 from odahuflow.packager.helpers.docker_builder import build_docker_image, push_docker_image

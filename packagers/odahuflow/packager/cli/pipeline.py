@@ -20,11 +20,11 @@ import uuid
 
 from odahuflow.sdk.gppi import entrypoint_invoke
 
+from odahuflow.packager.helpers.constants import DOCKERFILE_TEMPLATE, ODAHU_SUB_PATH_NAME, GPPI_LOCATION
+from odahuflow.packager.helpers.manifest_and_resource import validate_model_manifest, get_model_manifest
 from .constants import PACKAGE_NAME, ENTRYPOINT_INVOKER_SCRIPT, ENTRYPOINT_INVOKER_CLI_NAME
 from .data_models import DockerTemplateContext, PackagingResourceArguments
 from .template import render_packager_template
-from odahuflow.packager.helpers.constants import DOCKERFILE_TEMPLATE, ODAHU_SUB_PATH_NAME, GPPI_LOCATION
-from odahuflow.packager.helpers.manifest_and_resource import validate_model_manifest, get_model_manifest
 
 
 def work(model, output_folder, arguments: PackagingResourceArguments):

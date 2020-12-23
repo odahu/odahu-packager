@@ -18,10 +18,11 @@ import base64
 import logging
 import re
 import typing
+from typing import NamedTuple
+
 from boto3 import session
 from botocore.exceptions import ClientError
 from odahuflow.sdk.models import ConnectionSpec
-from typing import NamedTuple
 
 # Find the regular expression here https://github.com/awslabs/amazon-ecr-credential-helper/blob/c689f646af7fc73f3e4cea0a8dd4671eeeb6884e/ecr-login/api/client.go#L34  # pylint: disable=C0301
 ECR_URL = re.compile(

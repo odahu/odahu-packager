@@ -16,8 +16,8 @@
 """
 Data models (validation by pydantic)
 """
-import pydantic
 import typing
+import pydantic
 
 
 class OdahuProjectManifestBinaries(pydantic.BaseModel):
