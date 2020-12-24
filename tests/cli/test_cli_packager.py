@@ -14,18 +14,18 @@
 #    limitations under the License.
 #
 # pylint: disable=redefined-outer-name
-from unittest import mock
 import json
 import logging
 import os
-import pytest
 import tempfile
+from typing import List
+from unittest import mock
 
 import docker
+import pytest
 from docker.models.images import ImageCollection
 from odahuflow.sdk.models import K8sPackager, ModelPackaging, ModelPackagingSpec, PackagingIntegration, \
     PackagingIntegrationSpec, Schema, JsonSchema, PackagerTarget, Connection, ConnectionSpec
-from typing import List
 
 from odahuflow.packager.cli import work_resource_file
 from odahuflow.packager.helpers.io_proc_utils import run
