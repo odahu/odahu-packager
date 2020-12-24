@@ -36,5 +36,11 @@ class ModelMeta(pydantic.BaseModel):
 
     @pydantic.validator('version')
     def must_be_numeric(cls, v):  # pylint: disable=no-self-argument
-        assert v.isnumeric(), 'Model version must be numeric'
-        return v
+        if v.isnumeric():
+            return v
+
+        new_v = ''.join(re.findall(r'\d', v))
+        if len(new_v) != 0:
+            return new_v
+
+        raise ValueError('Model version must be numeric')
