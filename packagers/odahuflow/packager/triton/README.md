@@ -1,17 +1,29 @@
+# Triton Packager
+
+Triton Packager wraps a model with a [NVIDIA Triton Inference Server](https://github.com/triton-inference-server/server).
+The server supports multiple ML frameworks. Depending on the framework the packager expects different input.
+
 Required files:
 - model file/directory with fixed naming:
-    - TensorRT: model.plan
-    - TensorFlow SavedModel: model.savedmodel/...
-    - TensorFlow Grafdef: model.graphdef 
-    - ONNX: model.onnx file or directory
-    - TorchScript: model.pt
-    - Caffe 2 Netdef: model.netdef + init_model.netdef
+  - TensorRT: `model.plan`
+  - TensorFlow SavedModel: `model.savedmodel/...`
+  - TensorFlow Grafdef: `model.graphdef` 
+  - ONNX: `model.onnx` file or directory
+  - TorchScript: `model.pt`
+  - Caffe 2 Netdef: `model.netdef` + `init_model.netdef`
+- `config.pbtxt`, except for:
+  - TensorRT
+  - TF SavedModel
+  - ONNX
 
-- config.pbtxt except for:
-    - TensorRT
-    - TF SavedModel
-    - ONNX
-    
+Optional files:
+- `odahuflow.model.yaml` in the following format. When omitted defaults to model `model` of version `1`;
+```yaml
+name: model
+version: 1
+```
+- `conda.yaml` for Python backend. If conda-file detected new conda env is created and used for run model.
+- Any other arbitrary files will be copied and put next to model file.
 
 ## Triton Pipeline
 
