@@ -14,6 +14,7 @@
 
 import logging
 import pathlib
+import re
 import shutil
 import tempfile
 
@@ -29,7 +30,7 @@ from odahuflow.packager.helpers.manifest_and_resource import parse_resource_file
     save_result, extract_connection_from_resource
 from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
 
-from .constants import MODEL_MANIFEST_FILE, TRITON_CONFIG_FILE, CONDA_FILE, DOCKERFILE_TEMPLATE_FILE
+from .constants import MODEL_MANIFEST_FILE_RE, TRITON_CONFIG_FILE, DOCKERFILE_TEMPLATE_FILE, CONDA_FILE_RE
 from .models import PackagingArguments, ModelMeta
 from .triton_data import TritonBackends, optional_config_backends
 
@@ -59,8 +60,10 @@ def pack(model_dir, packager_file, verbose):
     not_to_copy = set()
 
     # Reading/generating Model metadata
-    if MODEL_MANIFEST_FILE in model_dir_files:
-        with open(model_dir / MODEL_MANIFEST_FILE) as f:
+    raw_matches = (re.match(MODEL_MANIFEST_FILE_RE, filename) for filename in model_dir_files)
+    matches = list(map(lambda x: x.group(), filter(lambda x: x is not None, raw_matches)))
+    if len(matches) > 0:
+        with open(model_dir / matches[0]) as f:
             model_manifest = ModelMeta(**yaml.load(f))
     else:
         model_manifest = ModelMeta(name='model', version='1')
@@ -92,12 +95,17 @@ def pack(model_dir, packager_file, verbose):
         not_to_copy.add(TRITON_CONFIG_FILE)
 
     # Handling conda file
-    conda_file_path = model_dir / CONDA_FILE
-    if conda_file_path.exists():
-        shutil.copy(conda_file_path, model_repo_dir)
-        not_to_copy.add(CONDA_FILE)
-    else:
-        conda_file_path = None
+    raw_matches = (re.match(CONDA_FILE_RE, filename) for filename in model_dir_files)
+    matches = list(map(lambda x: x.group(), filter(lambda x: x is not None, raw_matches)))
+    if len(matches) > 0:
+        conda_file = matches[0]
+        conda_file_path = model_dir / conda_file
+
+        if conda_file_path.exists():
+            shutil.copy(conda_file_path, model_repo_dir)
+            not_to_copy.add(conda_file)
+        else:
+            conda_file_path = None
 
     # Copying all other arbitrary files into output directory
     for file in model_dir.iterdir():
