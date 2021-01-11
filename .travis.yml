@@ -25,5 +25,7 @@ jobs:
       before_script:
         - make install-docker-packer
         - make install-docker-packer-tests
+      env:
+        - PYTHONPATH="${PYTHONPATH}:${CWD}/packagers"
       script:
         - make lint-docker-packer

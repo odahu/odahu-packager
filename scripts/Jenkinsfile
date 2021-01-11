@@ -94,7 +94,7 @@ pipeline {
                     }
 
                     verFiles = [
-                            'packagers/docker/odahuflow/packager/version.py',
+                            'packagers/version.py',
                     ]
                     cicdLibrary.setBuildMeta(verFiles)
                 }
