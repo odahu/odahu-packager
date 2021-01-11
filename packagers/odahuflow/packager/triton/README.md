@@ -36,8 +36,8 @@ version: 1
         - `conda.yaml`
         - `config.pbtxt`
 1. MLproject trainer 
-    - executes main entrypoint of MLproject. All files that need to be packed into 
-    training artifact must be saved in `/output`. For Triton scenario model file name must
+    - executes the main entrypoint of MLproject. All files that need to be packed into 
+    the training artifact must be saved in `/output`. For Triton scenario model file name must
     match Triton's expectations.
     - creates simple manifest in `/output` (e.g. `odahuflow.model.yaml`) that stores model name and version
     - copies all files from `data` directory to `/output` directory
