@@ -31,7 +31,7 @@ version: 1
     - `MLproject`
     - `train_conda.yaml`
     - `train.py`
-    - `data/` (directory with any addtitional files to inject into training artifact)
+    - `data/` (directory with any additional files to inject into training artifact)
         - `model.py`
         - `conda.yaml`
         - `config.pbtxt`
@@ -57,4 +57,3 @@ version: 1
     - Render Dockerfile basing on detected model backend:
         - for Python backend (`model.py` found) install miniconda and model's dependencies
     - Build Docker image and write it to `result.json` to push it on result-step
-
