@@ -41,7 +41,7 @@ version: 1
     match Triton's expectations.
     - creates simple manifest in `/output` (e.g. `odahuflow.model.yaml`) that stores model name and version
     - copies all files from `data` directory to `/output` directory
-    - move all the content of `/output` into directory provided as `--target` parameter to Tekton step 
+    - move all the content of `/output` into the directory provided as `--target` parameter to Tekton step 
 1. Triton packager
     - expects input directory (download and unzipped by setup step) to contain:
         - model file(s) (e.g. `model.pt` for TorchScript backend)
