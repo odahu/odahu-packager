@@ -22,7 +22,7 @@ Optional files:
 name: model
 version: 1
 ```
-- `conda.yaml` for Python backend. If conda-file detected new conda env is created and used for run model.
+- `conda.yaml` for Python backend. If conda-file detected, new conda env is created and used for model training.
 - Any other arbitrary files will be copied and put next to model file.
 
 ## Triton Pipeline
