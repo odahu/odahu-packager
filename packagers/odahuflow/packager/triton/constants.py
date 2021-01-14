@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-MODEL_MANIFEST_FILE_RE = r'^odahuflow\.model\.ya?ml$'
+MODEL_MANIFEST_FILE_RE = r'^odahuflow\.project\.ya?ml$'
 TRITON_CONFIG_FILE = 'config.pbtxt'
 CONDA_FILE_RE = r'^conda\.ya?ml$'
 
