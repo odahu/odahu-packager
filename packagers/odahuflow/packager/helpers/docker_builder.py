@@ -157,7 +157,7 @@ def _authorize_docker(client: docker.DockerClient, connection: Connection,
 
     logging.info('Trying to authorize %r on %r using password %r',
                  login, registry,
-                 '*' * len(connection.spec.password))
+                 '*' * 5)
     client.login(username=login,
                  password=password,
                  registry=registry,
@@ -231,11 +231,7 @@ def push_docker_image_docker(external_docker_name, push_connection: typing.Optio
 
     log_generator = client.images.push(
         repository=remote_tag,
-        stream=True,
-        auth_config={
-            'username': push_connection.spec.username,
-            'password': push_connection.spec.password
-        }
+        stream=True
     )
 
     for line in log_generator:
