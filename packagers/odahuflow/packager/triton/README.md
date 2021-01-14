@@ -17,7 +17,7 @@ Required files:
   - ONNX
 
 Optional files:
-- `odahuflow.model.yaml` in the following format. When omitted defaults to model `model` of version `1`;
+- `odahuflow.project.yaml` in the following format. When omitted defaults to model `model` of version `1`;
 ```yaml
 name: model
 version: 1
@@ -39,13 +39,13 @@ version: 1
     - executes the main entrypoint of MLproject. All files that need to be packed into 
     the training artifact must be saved in `/output`. For Triton scenario model file name must
     match Triton's expectations.
-    - creates simple manifest in `/output` (e.g. `odahuflow.model.yaml`) that stores model name and version
+    - creates simple manifest in `/output` (e.g. `odahuflow.project.yaml`) that stores model name and version
     - copies all files from `data` directory to `/output` directory
     - move all the content of `/output` into the directory provided as `--target` parameter to Tekton step 
 1. Triton packager
     - expects input directory (download and unzipped by setup step) to contain:
         - model file(s) (e.g. `model.pt` for TorchScript backend)
-        - `odahuflow.model.yaml` (can be optional to simplify packing pre-trained model;
+        - `odahuflow.project.yaml` (can be optional to simplify packing pre-trained model;
         use name `model` and version `1` if omitted)
         - `config.pbtxt` (Triton config; optional for some backends)
         - `conda.yaml` (for Python backend only)
