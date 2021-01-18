@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run: sudo make install-vulnerabilities-checker
       - run: make check-vulnerabilities
-  lint:
+  lint-n-test:
     docker:
       - image: circleci/python:3.6
     steps:
@@ -21,19 +21,9 @@ jobs:
       - run:
           name: Lint
           command: make lint-docker-packer
-  unit-test:
-    machine:
-      image: ubuntu-2004:202010-01
-    steps:
-      - checkout
       - run:
-          name: Setup
-          command: |
-            pyenv install 3.6.12
-            pyenv global 3.6.12
-            make install-docker-packer
-            make install-docker-packer-tests
-      - run: make test-docker-packer
+          name: Test
+          command: make test-docker-packer
   build:
     machine:
       image: ubuntu-2004:202010-01
@@ -47,12 +37,9 @@ workflows:
   main:
     jobs:
       - security-check
-      - lint:
+      - lint-n-test:
           requires:
             - security-check
-      - unit-test:
-          requires:
-            - lint
       - build:
           requires:
-            - unit-test
+            - lint-n-test
