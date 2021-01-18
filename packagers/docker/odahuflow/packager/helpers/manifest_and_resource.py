@@ -45,12 +45,12 @@ def get_model_manifest(model: str) -> OdahuProjectManifest:
             try:
                 data = yaml.safe_load(data)
             except yaml.YAMLError as decode_error:
-                raise ValueError(f'Cannot decode ModelPacking resource file: {decode_error}')
+                raise ValueError(f'Cannot decode ModelPacking resource file: {decode_error}') from decode_error
 
     try:
         return OdahuProjectManifest(**data)
     except pydantic.ValidationError as valid_error:
-        raise Exception(f'Odahu manifest file is in incorrect format: {valid_error}')
+        raise Exception(f'Odahu manifest file is in incorrect format: {valid_error}') from valid_error
 
 
 def parse_resource_file(resource_file: str) -> K8sPackager:
@@ -70,12 +70,12 @@ def parse_resource_file(resource_file: str) -> K8sPackager:
             try:
                 data = yaml.safe_load(data)
             except yaml.YAMLError as decode_error:
-                raise ValueError(f'Cannot decode Connection resource file: {decode_error}')
+                raise ValueError(f'Cannot decode Connection resource file: {decode_error}') from decode_error
 
     try:
         return K8sPackager.from_dict(data)
     except pydantic.ValidationError as valid_error:
-        raise Exception(f'Odahu resource file is in incorrect format: {valid_error}')
+        raise Exception(f'Odahu resource file is in incorrect format: {valid_error}') from valid_error
 
 
 def extract_connection_from_resource(k8s_packager: K8sPackager,

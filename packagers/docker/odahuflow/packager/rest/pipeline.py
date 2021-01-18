@@ -115,7 +115,7 @@ def _generate_template_context(arguments: PackagingResourceArguments,
     """
     Generate Docker packager context for templates
     """
-    logging.info(f'Building context for template')
+    logging.info('Building context for template')
 
     return DockerTemplateContext(
         model_name=manifest.model.name,
