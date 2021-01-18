@@ -29,7 +29,8 @@ jobs:
       - run:
           name: Setup
           command: |
-            pyenv global 3.6
+            pyenv install 3.6.12
+            pyenv global 3.6.12
             make install-docker-packer
             make install-docker-packer-tests
       - run: make test-docker-packer
@@ -38,7 +39,14 @@ jobs:
       image: ubuntu-2004:202010-01
     steps:
       - checkout
-      - run: make docker-build-docker-packager
+      - run:
+          name: Setup
+          command: |
+            pyenv install 3.6.12
+            pyenv global 3.6.12
+      - run:
+          name: Build
+          command: make docker-build-docker-packager
 
 workflows:
   main:
