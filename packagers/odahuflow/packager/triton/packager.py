@@ -30,7 +30,8 @@ from odahuflow.packager.helpers.manifest_and_resource import parse_resource_file
     save_result, extract_connection_from_resource
 from odahuflow.packager.helpers.utils import build_image_name, TemplateNameValues
 
-from odahuflow.packager.triton.constants import MODEL_MANIFEST_FILE_RE, TRITON_CONFIG_FILE, DOCKERFILE_TEMPLATE_FILE, CONDA_FILE_RE
+from odahuflow.packager.triton.constants import MODEL_MANIFEST_FILE_RE, TRITON_CONFIG_FILE, \
+    DOCKERFILE_TEMPLATE_FILE, CONDA_FILE_RE
 from odahuflow.packager.triton.models import PackagingArguments, ModelMeta
 from odahuflow.packager.triton.triton_data import TritonBackends, optional_config_backends
 
