@@ -22,9 +22,9 @@ from odahuflow.packager.helpers.constants import ODAHU_SUB_PATH_NAME, HANDLER_MO
 from odahuflow.packager.helpers.data_models import OdahuProjectManifest
 from odahuflow.packager.helpers.io_proc_utils import make_executable
 from odahuflow.packager.helpers.manifest_and_resource import validate_model_manifest, get_model_manifest
-from .constants import RESOURCES_FOLDER
-from .data_models import PackagingResourceArguments, DockerTemplateContext
-from .template import render_packager_template
+from odahuflow.packager.flask.constants import RESOURCES_FOLDER
+from odahuflow.packager.flask.data_models import PackagingResourceArguments, DockerTemplateContext
+from odahuflow.packager.flask.template import render_packager_template
 
 
 def work(model, output_folder, arguments: PackagingResourceArguments):

@@ -21,8 +21,8 @@ import pydantic
 import yaml
 from odahuflow.sdk.models import K8sPackager, Connection, PackagingIntegration
 
-from .constants import PROJECT_FILE, RESULT_FILE_NAME, DOCKER_IMAGE_RESULT
-from .data_models import OdahuProjectManifest
+from odahuflow.packager.helpers.constants import PROJECT_FILE, RESULT_FILE_NAME, DOCKER_IMAGE_RESULT
+from odahuflow.packager.helpers.data_models import OdahuProjectManifest
 
 
 def get_model_manifest(model: str) -> OdahuProjectManifest:

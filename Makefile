@@ -42,7 +42,7 @@ docker-push-docker-packager-base:
 ## install-docker-packer: Installs docker packer dependencies
 install-docker-packer:
 	cd packagers && \
-		pip3 install ${BUILD_PARAMS} -e .
+		pip install ${BUILD_PARAMS} -e .
 
 ## install-docker-packer-tests: Instasll docker packer test dependencies
 install-docker-packer-tests:
