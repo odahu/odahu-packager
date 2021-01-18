@@ -29,10 +29,7 @@ jobs:
       - run:
           name: Setup
           command: |
-            sudo apt-get install -y software-properties-common
-            sudo add-apt-repository ppa:deadsnakes/ppa
-            sudo apt-get update
-            sudo apt-get install python3.6
+            pyenv global 3.6
             make install-docker-packer
             make install-docker-packer-tests
       - run: make test-docker-packer
