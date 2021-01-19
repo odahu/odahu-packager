@@ -43,9 +43,14 @@ def extract_docker_login_credentials(
     """
     if connection.spec.type == ECR_CONNECTION_TYPE and docker_image_url:
         user, password = get_ecr_credentials(connection.spec, docker_image_url)
+        logging.info("ECR credentials were generated")
 
         return connection.spec.uri, user, password
 
+    logging.info(
+        f"For connection type {connection.spec.type} and docker image {docker_image_url} "
+        f"credentials from connection were returned"
+    )
     return connection.spec.uri, connection.spec.username, connection.spec.password
 
 
@@ -138,7 +143,8 @@ def push_docker_image_buildah(external_docker_name, push_connection: typing.Opti
     return remote_tag
 
 
-def _authorize_docker(client: docker.DockerClient, connection: Connection):
+def _authorize_docker(client: docker.DockerClient, connection: Connection,
+                      docker_image_url: typing.Optional[str] = None):
     """
     Authorize docker api on external registry
 
@@ -147,11 +153,11 @@ def _authorize_docker(client: docker.DockerClient, connection: Connection):
     :param connection: connection credentials
     :return: None
     """
-    registry, login, password = extract_docker_login_credentials(connection)
+    registry, login, password = extract_docker_login_credentials(connection, docker_image_url)
 
     logging.info('Trying to authorize %r on %r using password %r',
                  login, registry,
-                 '*' * len(connection.spec.password))
+                 '*' * 5)
     client.login(username=login,
                  password=password,
                  registry=registry,
@@ -220,13 +226,12 @@ def push_docker_image_docker(external_docker_name, push_connection: typing.Optio
     local_built = client.images.get(external_docker_name)
     local_built.tag(remote_tag)
 
+    logging.debug('Trying to authorize user to push result image')
+    _authorize_docker(client, push_connection, remote_tag)
+
     log_generator = client.images.push(
         repository=remote_tag,
-        stream=True,
-        auth_config={
-            'username': push_connection.spec.username,
-            'password': push_connection.spec.password
-        }
+        stream=True
     )
 
     for line in log_generator:
