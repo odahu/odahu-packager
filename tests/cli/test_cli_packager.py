@@ -100,7 +100,8 @@ def mock_push(*args, **kwargs):
     yield 'Image is not pushed because of mocking'
 
 
-def test_cli(tmp_path, packager_manifest_file: str):
+@mock.patch('odahuflow.packager.helpers.docker_builder._authorize_docker')
+def test_cli(_, tmp_path, packager_manifest_file: str):
     logging.basicConfig(level=logging.DEBUG)
 
     model_path = os.path.join(RESOURCES_DIR, 'simple-model')
