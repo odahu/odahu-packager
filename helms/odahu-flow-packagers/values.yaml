@@ -39,7 +39,7 @@ packagers:
         # Default connection ID
         # Type: str
         default: ""
-      # Configuration of docker-push target
+      # Configuration of docker-pull target
       # Type: dict
       docker_pull:
         # Default connection ID
@@ -64,7 +64,7 @@ packagers:
         # Default connection ID
         # Type: str
         default: ""
-      # Configuration of docker-push target
+      # Configuration of docker-pull target
       # Type: dict
       docker_pull:
         # Default connection ID
@@ -86,6 +86,12 @@ packagers:
       # Configuration of docker-push target
       # Type: dict
       docker_push:
+        # Default connection ID
+        # Type: str
+        default: ""
+      # Configuration of docker-pull target
+      # Type: dict
+      docker_pull:
         # Default connection ID
         # Type: str
         default: ""
