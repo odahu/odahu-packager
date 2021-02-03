@@ -149,6 +149,10 @@ data:
             connectionTypes: ["docker", "ecr"]
             default: "{{ .Values.packagers.triton.targets.docker_push.default }}"
             required: true
+          - name: docker-pull
+            connectionTypes: ["docker", "ecr"]
+            default: "{{ .Values.packagers.triton.targets.docker_pull.default }}"
+            required: false
         arguments:
           properties:
             - name: triton_base_image_tag
