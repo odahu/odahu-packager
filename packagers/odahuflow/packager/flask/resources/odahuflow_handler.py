@@ -218,6 +218,7 @@ def handle_prediction_on_matrix(parsed_data: dict) -> bytes:
     try:
         response_json = orjson.dumps(response, option=orjson.OPT_SERIALIZE_NUMPY)
     except TypeError as e:
+        # Catches cases when NumPy array has unsupported dtypes
         if not isinstance(response['prediction'], np.ndarray):
             raise e
 
