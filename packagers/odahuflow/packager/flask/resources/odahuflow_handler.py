@@ -14,26 +14,14 @@
 #    limitations under the License.
 #
 import json
-import numpy as np
-import odahuflow_model.entrypoint
-import orjson
 import os
-from flask import Flask, jsonify, Response, request
-from typing import List, Dict, Union, Any, Tuple
+from typing import List, Dict, Union, Any
 
-import numpy as np
-import odahuflow_model.entrypoint
-import os
-import orjson
-import os
-import os
 from flask import Flask, jsonify, Response, request
 import orjson
 import numpy as np
 
-from typing import List, Dict, Union, Any
-from typing import List, Dict, Union, Any, Tuple
-from typing import List, Dict, Union, Any
+import odahuflow_model.entrypoint
 
 REQUEST_ID = 'x-request-id'
 MODEL_REQUEST_ID = 'request-id'
