@@ -34,6 +34,9 @@ SUPPORTED_PREDICTION_MODE = odahuflow_model.entrypoint.init()
 ODAHU_MODEL_NAME = "ODAHU_MODEL_NAME"
 ODAHU_MODEL_VERSION = "ODAHU_MODEL_VERSION"
 
+model_name = os.getenv(ODAHU_MODEL_NAME)
+model_version = os.getenv(ODAHU_MODEL_VERSION)
+
 
 def build_error_response(message):
     return Response(response=json.dumps({'message': message}), status=500, mimetype='application/json')
@@ -47,19 +50,18 @@ def info():
 
     input_properties = generate_input_props(input_schema)
     output_properties = generate_output_props(output_schema)
-
     return jsonify({
         "swagger": "2.0",
         "info": {
             "description": "This is a EDI server.",
-            "title": "Model API",
+            "title": model_name,
+            "version": model_version,
             "termsOfService": "http://swagger.io/terms/",
             "contact": {},
             "license": {
                 "name": "Apache 2.0",
                 "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-            },
-            "version": "1.0"
+            }
         },
         "schemes": [
             "https"
@@ -116,6 +118,7 @@ def info():
             }
         }
     })
+
 
 
 def generate_input_props(input_schema: List[Dict[str, Union[Union[str, None, bool], Any]]]) -> Dict[str, Any]:
