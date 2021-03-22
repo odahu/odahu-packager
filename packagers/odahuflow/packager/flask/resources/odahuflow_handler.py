@@ -23,8 +23,6 @@ import numpy as np
 
 import odahuflow_model.entrypoint
 
-REQUEST_ID = 'x-request-id'
-MODEL_REQUEST_ID = 'request-id'
 MODEL_NAME = 'Model-Name'
 MODEL_VERSION = 'Model-Version'
 
@@ -252,9 +250,5 @@ def predict():
 
     resp.headers[MODEL_NAME] = os.getenv(ODAHU_MODEL_NAME)
     resp.headers[MODEL_VERSION] = os.getenv(ODAHU_MODEL_VERSION)
-
-    request_id = request.headers.get(MODEL_REQUEST_ID) or request.headers.get(REQUEST_ID)
-    if request_id:
-        resp.headers[MODEL_REQUEST_ID] = request_id
 
     return resp
