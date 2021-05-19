@@ -17,6 +17,7 @@ import pathlib
 import re
 import shutil
 import tempfile
+from typing import Optional
 
 import click
 import jinja2
@@ -66,16 +67,19 @@ def pack(model_dir, packager_file, verbose):
     if len(matches) > 0:
         with open(model_dir / matches[0]) as f:
             model_manifest = ModelMeta(**yaml.load(f))
+        log.info(f'Found model manifest: {model_manifest.json()}')
     else:
         model_manifest = ModelMeta(name='model', version='1')
+        log.info(f'Model manifest missing, setting defaults: {model_manifest.json()}')
 
     # Creating a file structure expected by Triton
     output_model_dir = model_repo_dir / model_manifest.name
     model_version_dir = output_model_dir / model_manifest.version
     model_version_dir.mkdir(parents=True)
+    log.info(f'Created directory for model: {model_version_dir}')
 
     # Detecting Triton Backend basing on model file name
-    detected_backend = None
+    detected_backend: Optional[TritonBackends] = None
     for backend in TritonBackends:
         if backend.value in model_dir_files:
             detected_backend = backend
@@ -86,16 +90,21 @@ def pack(model_dir, packager_file, verbose):
                          'Refer to Nvidia Triton docs to find expected naming conventions: '
                          'https://docs.nvidia.com/deeplearning/triton-inference-server/master-user-guide/docs/'
                          'model_repository.html#framework-model-definition')
+    log.info(f'Detected Triton backend: {detected_backend.name}')
 
     # Validating that Triton config appears if required for found backend
     config_path = model_dir / TRITON_CONFIG_FILE
-    if not config_path.exists() and detected_backend not in optional_config_backends:
-        raise ValueError(f'{TRITON_CONFIG_FILE} is required for {detected_backend.name} backend')
+    if not config_path.exists():
+        if detected_backend not in optional_config_backends:
+            raise ValueError(f'{TRITON_CONFIG_FILE} is required for {detected_backend.name} backend')
+        log.info('Triton config is ommitted')
     else:
+        log.info(f'Copying Triton config file: {config_path} -> {output_model_dir}')
         shutil.copy(config_path, output_model_dir)
         not_to_copy.add(TRITON_CONFIG_FILE)
 
     # Handling conda file
+    conda_file_path = None
     raw_matches = (re.match(CONDA_FILE_RE, filename) for filename in model_dir_files)
     matches = list(map(lambda x: x.group(), filter(lambda x: x is not None, raw_matches)))
     if len(matches) > 0:
@@ -103,20 +112,23 @@ def pack(model_dir, packager_file, verbose):
         conda_file_path = model_dir / conda_file
 
         if conda_file_path.exists():
+            log.info(f'Copying conda file: {conda_file_path} -> {model_repo_dir}')
             shutil.copy(conda_file_path, model_repo_dir)
             not_to_copy.add(conda_file)
-        else:
-            conda_file_path = None
 
     # Copying all other arbitrary files into output directory
     for file in model_dir.iterdir():
         if file.name in not_to_copy:
+            log.info(f'Skipping file: {file.name}')
             continue
         if file.is_dir():
-            shutil.copytree(file, model_version_dir)
+            log.info(f'Copying dir: {file} -> {model_version_dir / file.name}')
+            shutil.copytree(file, model_version_dir / file.name)
             continue
+        log.info(f'Copying file: {file} -> {model_version_dir}')
         shutil.copy(file, model_version_dir)
 
+    log.info('Rendering template')
     dockerfile_template = jinja_env.get_template(DOCKERFILE_TEMPLATE_FILE)
     dockerfile_content = dockerfile_template.render(
         model_repo=str(model_repo_dir),
