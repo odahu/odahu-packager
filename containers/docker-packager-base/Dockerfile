@@ -14,9 +14,9 @@
 #    limitations under the License.
 #
 
-FROM python:3.6
+FROM python:3.9
 
-ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-4.7.12-Linux-x86_64.sh
+ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PATH="/usr/local/nvidia/bin:/opt/conda/bin:${PATH}" \
