@@ -1,5 +1,5 @@
 #
-#    Copyright 2020 EPAM Systems
+#    Copyright 2021 EPAM Systems
 #
 #    Licensed under the Apache License, Version 2.0 (the "License");
 #    you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 #    limitations under the License.
 #
 
-FROM python:3.9
+FROM ubuntu:18.04
 
 ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
 
@@ -24,7 +24,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
 
 # Install native dependencies
 RUN apt-get update --fix-missing && \
-    apt-get install -y wget bzip2 ca-certificates git && \
+    apt-get install -y wget git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
