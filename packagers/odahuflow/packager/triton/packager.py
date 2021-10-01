@@ -65,7 +65,7 @@ def pack(model_dir, packager_file, verbose):
     raw_matches = (re.match(MODEL_MANIFEST_FILE_RE, filename) for filename in model_dir_files)
     matches = list(map(lambda x: x.group(), filter(lambda x: x is not None, raw_matches)))
     if len(matches) > 0:
-        with open(model_dir / matches[0]) as f:
+        with open(model_dir / matches[0], encoding='utf-8') as f:
             model_manifest = ModelMeta(**yaml.load(f))
         log.info(f'Found model manifest: {model_manifest.json()}')
     else:
@@ -137,7 +137,7 @@ def pack(model_dir, packager_file, verbose):
     )
 
     dockerfile_name = 'Dockerfile'
-    with open(model_repo_dir / dockerfile_name, 'w') as dockerfile:
+    with open(model_repo_dir / dockerfile_name, 'w', encoding='utf-8') as dockerfile:
         dockerfile.write(dockerfile_content)
 
     image_name = build_image_name(

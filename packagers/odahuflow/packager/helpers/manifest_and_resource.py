@@ -37,7 +37,7 @@ def get_model_manifest(model: str) -> OdahuProjectManifest:
     if not manifest_file:
         raise Exception(f'Can not find manifest file {manifest_file}')
 
-    with open(manifest_file, 'r') as manifest_stream:
+    with open(manifest_file, 'r', encoding='utf-8') as manifest_stream:
         data = manifest_stream.read()
 
         try:
@@ -62,7 +62,7 @@ def parse_resource_file(resource_file: str) -> K8sPackager:
     :type resource_file: str
     :return: PackagingK8SResource -- resource
     """
-    with open(resource_file, 'r') as resource_file_stream:
+    with open(resource_file, 'r', encoding='utf-8') as resource_file_stream:
         data = resource_file_stream.read()
 
         try:
@@ -118,7 +118,7 @@ def validate_model_manifest(manifest: OdahuProjectManifest) -> None:
 
 
 def save_result(remote_image_name: str):
-    with open(RESULT_FILE_NAME, 'w') as fp:
+    with open(RESULT_FILE_NAME, 'w', encoding='utf-8') as fp:
         json.dump({DOCKER_IMAGE_RESULT: remote_image_name}, fp)
 
 

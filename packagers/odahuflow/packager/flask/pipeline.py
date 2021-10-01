@@ -85,14 +85,14 @@ def work(model, output_folder, arguments: PackagingResourceArguments):
 
     entrypoint_target = os.path.join(output_folder, ENTRYPOINT_TEMPLATE)
     logging.info(f'Dumping {ENTRYPOINT_TEMPLATE} to {entrypoint_target}')
-    with open(entrypoint_target, 'w') as out_stream:
+    with open(entrypoint_target, 'w', encoding='utf-8') as out_stream:
         out_stream.write(final_entrypoint)
 
     dockerfile_content = render_packager_template(DOCKERFILE_TEMPLATE, context.dict())
     dockerfile_target = os.path.join(output_folder, DOCKERFILE_TEMPLATE)
     logging.info(f'Dumping {DOCKERFILE_TEMPLATE} to {dockerfile_target}')
 
-    with open(dockerfile_target, 'w') as out_stream:
+    with open(dockerfile_target, 'w', encoding='utf-8') as out_stream:
         out_stream.write(dockerfile_content)
     make_executable(dockerfile_target)
 

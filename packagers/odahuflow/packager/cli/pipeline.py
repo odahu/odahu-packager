@@ -72,20 +72,21 @@ def work(model, output_folder, arguments: PackagingResourceArguments):
     local_entrypoint = entrypoint_invoke.__file__
     logging.info(f'Copying entrypoit invoker {local_entrypoint} to {target_entrypoint}')
     os.makedirs(os.path.join(output_folder, PACKAGE_NAME), exist_ok=True)
-    open(os.path.join(output_folder, PACKAGE_NAME, '__init__.py'), 'a').close()
+    # pylint: disable-next=consider-using-with
+    open(os.path.join(output_folder, PACKAGE_NAME, '__init__.py'), 'a', encoding='utf-8').close()
     shutil.copy(local_entrypoint, target_entrypoint)
 
     # copy cli setup
     setup_content = render_packager_template('setup.py', context.dict())
     setup_target = os.path.join(output_folder, 'setup.py')
     logging.info(f'Dumping setup.py to {setup_target}')
-    with open(setup_target, 'w') as out_stream:
+    with open(setup_target, 'w', encoding='utf-8') as out_stream:
         out_stream.write(setup_content)
 
     dockerfile_content = render_packager_template(DOCKERFILE_TEMPLATE, context.dict())
     dockerfile_target = os.path.join(output_folder, DOCKERFILE_TEMPLATE)
     logging.info(f'Dumping {DOCKERFILE_TEMPLATE} to {dockerfile_target}')
-    with open(dockerfile_target, 'w') as out_stream:
+    with open(dockerfile_target, 'w', encoding='utf-8') as out_stream:
         out_stream.write(dockerfile_content)
 
     return manifest
