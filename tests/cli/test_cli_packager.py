@@ -120,7 +120,7 @@ def test_cli(_, tmp_path, packager_manifest_file: str):
         input_fp = os.path.join(tmp_path, 'input.json')
         output_fp = os.path.join(tmp_path, 'results.json')
 
-        with open(input_fp, 'w') as f:
+        with open(input_fp, 'w', encoding='utf-8') as f:
             json.dump({
                 'columns': 'Destiny line',
                 'data': [[1, 2, 3, 4]]
@@ -130,7 +130,7 @@ def test_cli(_, tmp_path, packager_manifest_file: str):
             'predict', '/opt/test/input.json', '/opt/test/',
             stream_output=False)
 
-        with open(output_fp) as f:
+        with open(output_fp, encoding='utf-8') as f:
             result = json.load(f)
             assert result['prediction'] == [[42]]
             assert result['columns'] == ['result']
