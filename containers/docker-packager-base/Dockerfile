@@ -24,7 +24,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
 
 # Install native dependencies
 RUN apt-get update --fix-missing && \
-    apt-get install -y wget git && \
+    apt-get install -y wget git bzip2 ca-certificates && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
