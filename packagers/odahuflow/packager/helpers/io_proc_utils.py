@@ -77,7 +77,7 @@ def run(*args: str, cwd=None, stream_output: bool = True, sensitive: bool = True
             stdout, stderr = child.communicate()
         exit_code = child.wait()
         if exit_code != 0:
-            # pylint: disable-next=consider-using-f-string
-            raise Exception("Non-zero exit code: %s\n\nSTDOUT:\n%s\n\nSTDERR:%s" %
-                            (exit_code, stdout, stderr))
+            raise Exception(f'Non-zero exit code: {exit_code}\n\n'
+                            f'STDOUT:\n{stdout}\n\n'
+                            f'STDERR:{stderr}')
         return exit_code, stdout, stderr
