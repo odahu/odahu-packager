@@ -28,17 +28,17 @@ def extract_version() -> str:
 
     :return: odahuflow version
     """
-    with open(VERSION_FILE, 'rt') as version_file:
+    with open(VERSION_FILE, 'rt', encoding='utf-8') as version_file:
         file_content = version_file.read()
         VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
         mo = re.search(VSRE, file_content, re.M)
         if mo:
             return mo.group(1)
         else:
-            raise RuntimeError("Unable to find version string in %s." % (file_content,))
+            raise RuntimeError(f"Unable to find version string in {file_content}.")
 
 
-with open('requirements.txt') as f:
+with open('requirements.txt', encoding='utf-8') as f:
     requirements = f.read().splitlines()
 
 setup(

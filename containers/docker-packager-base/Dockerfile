@@ -14,9 +14,9 @@
 #    limitations under the License.
 #
 
-FROM python:3.6
+FROM ubuntu:18.04
 
-ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-4.7.12-Linux-x86_64.sh
+ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-py39_4.10.3-Linux-x86_64.sh
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PATH="/usr/local/nvidia/bin:/opt/conda/bin:${PATH}" \
@@ -24,7 +24,7 @@ ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
 
 # Install native dependencies
 RUN apt-get update --fix-missing && \
-    apt-get install -y wget bzip2 ca-certificates git && \
+    apt-get install -y wget git bzip2 ca-certificates && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
