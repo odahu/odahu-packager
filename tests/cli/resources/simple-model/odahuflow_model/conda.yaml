@@ -2,3 +2,4 @@ channels:
 - defaults
 dependencies:
 - python=3.6.9
+- numpy=1.19.2
