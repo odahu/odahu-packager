@@ -17,7 +17,6 @@
 FROM python:3.6
 
 ARG MINICONDA_URL=https://repo.anaconda.com/miniconda/Miniconda3-4.7.12-Linux-x86_64.sh
-ARG CONDA_ENV_PY_VERSION=3.9
 
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8 \
     PATH="/usr/local/nvidia/bin:/opt/conda/bin:${PATH}" \
@@ -39,7 +38,7 @@ RUN wget --quiet ${MINICONDA_URL} -O ~/miniconda.sh && \
     conda clean -tipsy && \
     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    conda create --name ${ODAHU_CONDA_ENV_NAME} python=${CONDA_ENV_PY_VERSION} --no-default-packages && \
+    conda create --name ${ODAHU_CONDA_ENV_NAME} python --no-default-packages && \
     echo "conda activate ${ODAHU_CONDA_ENV_NAME}" >> ~/.bashrc
 
 WORKDIR /app
