@@ -72,7 +72,7 @@ def work(model, output_folder, arguments: PackagingResourceArguments):
     local_entrypoint = entrypoint_invoke.__file__
     logging.info(f'Copying entrypoit invoker {local_entrypoint} to {target_entrypoint}')
     os.makedirs(os.path.join(output_folder, PACKAGE_NAME), exist_ok=True)
-    open(os.path.join(output_folder, PACKAGE_NAME, '__init__.py'), 'a').close()  # pylint: disable=consider-using-with
+    open(os.path.join(output_folder, PACKAGE_NAME, '__init__.py'), 'a').close()
     shutil.copy(local_entrypoint, target_entrypoint)
 
     # copy cli setup

@@ -66,7 +66,7 @@ def pack(model_dir, packager_file, verbose):
     matches = list(map(lambda x: x.group(), filter(lambda x: x is not None, raw_matches)))
     if len(matches) > 0:
         with open(model_dir / matches[0]) as f:
-            model_manifest = ModelMeta(**yaml.safe_load(f))
+            model_manifest = ModelMeta(**yaml.load(f))
         log.info(f'Found model manifest: {model_manifest.json()}')
     else:
         model_manifest = ModelMeta(name='model', version='1')
