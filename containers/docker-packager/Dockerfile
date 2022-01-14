@@ -31,4 +31,4 @@ COPY containers/docker-packager/registries.conf \
 COPY ./packagers packagers/
 RUN pip3 install --upgrade pip setuptools wheel && \
     python3 -m pip install -r packagers/requirements.txt && \
-    python3 -m pip install -e packagers/
+    python3 -m pip install --prefix /usr/local -e packagers/
